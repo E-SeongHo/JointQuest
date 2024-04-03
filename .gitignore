@@ -1,3 +1,13 @@
+
+# Prototype and Third parties
+Content/ThirdParties/
+Content/*/ThirdParties/
+
+# Rider
+.idea/
+.vsconfig
+
+# Github UnrealEngine gitignore template
 # Visual Studio 2015 user specific files
 .vs/
 
