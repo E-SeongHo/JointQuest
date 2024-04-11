@@ -24,11 +24,14 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* MeshCube;
 
-	bool bIsMoving = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Move, meta = (AllowPrivateAccess = "true"))
 	float Speed = 10.0f;
-	float MoveDuration = 1.0f;
-	float ElapsedTime = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Move, meta = (AllowPrivateAccess = "true"))
+	float MoveDuration = 1.5f;
+
+	bool bIsMoving = false;
+	float ElapsedTime = 0.0f;
 	FVector StartLocation;
 	FVector TargetLocation;
 	
