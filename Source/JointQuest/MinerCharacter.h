@@ -20,19 +20,10 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-	void BeginCharging();
-
-	UFUNCTION(BlueprintCallable)
-	void EndCharging();
-
-	UFUNCTION(BlueprintCallable)
-	void DigGround();
-
 private:
 	void Move(const struct FInputActionValue& Value);
 	virtual void StopJumping() override;
-	
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -49,16 +40,5 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
-	class UAnimMontage* KneeUpAnimMontage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
-	class UAnimMontage* KneeDownAnimMontage;
-	
 	TArray<AActor*> MovableActors;
-
-	FTimerHandle ChargingTimerHandle;
-
-	bool bIsCharging = false;
-	float ChargedTime = 0.0f;
 };

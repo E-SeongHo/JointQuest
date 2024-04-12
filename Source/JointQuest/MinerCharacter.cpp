@@ -10,7 +10,6 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "MovableActor.h"
-#include "NetworkMessage.h"
 #include "Kismet/GameplayStatics.h"
 
 AMinerCharacter::AMinerCharacter()
@@ -71,37 +70,10 @@ void AMinerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
-void AMinerCharacter::BeginCharging()
-{
-	check(!bIsCharging);
-
-	PlayAnimMontage(KneeUpAnimMontage);
-	bIsCharging = true;
-
-	GetWorld()->GetTimerManager().SetTimer(ChargingTimerHandle, FTimerDelegate::CreateLambda([&]
-	{
-		ChargedTime += GetWorld()->DeltaTimeSeconds;
-		if(!bIsCharging)
-		{
-			GetWorldTimerManager().ClearTimer(ChargingTimerHandle);
-		}
-	}), GetWorld()->DeltaTimeSeconds, true);
-
-}
-
-void AMinerCharacter::EndCharging()
-{
-	check(bIsCharging);
-	
-	bIsCharging = false;
-	UE_LOG(LogTemp, Display, TEXT("Start Digging, Charged : %f"), ChargedTime);
-
-	PlayAnimMontage(KneeDownAnimMontage);
-}
-
 void AMinerCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *MovementVector.ToString());
 	
 	if (Controller != nullptr)
 	{
@@ -118,18 +90,11 @@ void AMinerCharacter::Move(const FInputActionValue& Value)
 void AMinerCharacter::StopJumping()
 {
 	Super::StopJumping();
-
-}
-
-void AMinerCharacter::DigGround()
-{
+	
 	for(AActor* MovableActor : MovableActors)
 	{
 		AMovableActor* MovingActor = Cast<AMovableActor>(MovableActor);
 		MovingActor->LiftUp(500.0f, 50.0f);
 	}
-
-	ChargedTime = 0.0f;
 }
-
 
