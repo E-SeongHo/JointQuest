@@ -54,6 +54,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* KneeDownAnimMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = CameraShake, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCameraShakeBase> DiggingShake;
 	
 	TArray<AActor*> MovableActors;
 

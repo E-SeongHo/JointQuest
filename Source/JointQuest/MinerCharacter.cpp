@@ -12,6 +12,7 @@
 #include "MovableActor.h"
 #include "NetworkMessage.h"
 #include "Kismet/GameplayStatics.h"
+#include "SoilGenerator.h"
 
 AMinerCharacter::AMinerCharacter()
 {
@@ -50,6 +51,7 @@ void AMinerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
 }
 
 void AMinerCharacter::Tick(float DeltaTime)
@@ -123,6 +125,9 @@ void AMinerCharacter::StopJumping()
 
 void AMinerCharacter::DigGround()
 {
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	PC->ClientStartCameraShake(DiggingShake);
+
 	for(AActor* MovableActor : MovableActors)
 	{
 		AMovableActor* MovingActor = Cast<AMovableActor>(MovableActor);
