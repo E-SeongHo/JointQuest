@@ -14,9 +14,9 @@ void ASoilGeneratorActor::BeginPlay()
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Display, TEXT("Soil Generator Init"));
 	// hack : for test
-	LeftGenPos = {-353.000000,109.000000};
-	RightGenPos = {-353.000000,-2273.000000};
-	BackGenPos = {-782.000000,-972.000000};
+	LeftGenPos = {-98.000000,1155.000000};
+	RightGenPos = {-98.000000,-1155.000000};
+	BackGenPos = {-696.000000,0.000000};
 
 	GenerateSoils();
 }
@@ -32,7 +32,7 @@ void ASoilGeneratorActor::GenerateSoils()
 	AMovableActor** PeekPtr = LeftSoilsQueue.Peek();
 	AMovableActor* PeekElem = PeekPtr ? *PeekPtr : nullptr;
 
-	float CurrentHeight = PeekElem ? PeekElem->GetActorLocation().Z : 443.0f;
+	float CurrentHeight = PeekElem ? PeekElem->GetActorLocation().Z : 3427.0f;
 
 	FVector LeftSideSpawnLocation(LeftGenPos.X, LeftGenPos.Y, 0.0f);
 	FVector RightSideSpawnLocation(RightGenPos.X, RightGenPos.Y, 0.0f);
