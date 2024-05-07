@@ -44,6 +44,9 @@ private:
 	float BlockHeight = 2000.0f; // hack : for test
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Soil, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> CharacterStage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Soil, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AMovableActor> LeftBlockTemplate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Soil, meta = (AllowPrivateAccess = "true"))
@@ -52,4 +55,5 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Soil, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AMovableActor> BackBlockTemplate;
 
+	FVector RefLocation;
 };
