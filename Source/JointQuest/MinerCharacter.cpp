@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "MinerPlayerController.h"
 #include "MovableActor.h"
 #include "NetworkMessage.h"
 #include "Kismet/GameplayStatics.h"
@@ -43,8 +44,9 @@ void AMinerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMovableActor::StaticClass(), MovableActors);
-
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	PlayerController = Cast<AMinerPlayerController>(Controller);
+	
+	if (PlayerController)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -58,6 +60,23 @@ void AMinerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// FSM
+	UE_LOG(LogTemp, Display, TEXT("Current Tracking Status : %d"), PlayerController->GetCurrentStatus());
+
+	switch(PlayerController->GetCurrentStatus())
+	{
+	case EJointTrackingStatus::Standing:
+		break;
+	case EJointTrackingStatus::Rising: // starts charging (play animation)
+		if(!bIsCharging) BeginCharging();
+		break;
+	case EJointTrackingStatus::Holding: 
+		break;
+	case EJointTrackingStatus::Falling: // quit charging (play animation)
+		if(bIsCharging) EndCharging();
+		break;
+	}
+	
 }
 
 void AMinerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -75,6 +94,8 @@ void AMinerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AMinerCharacter::BeginCharging()
 {
+	UE_LOG(LogTemp, Display, TEXT("Charging after : %d"), bIsCharging);
+
 	check(!bIsCharging);
 
 	PlayAnimMontage(KneeUpAnimMontage);
@@ -99,6 +120,8 @@ void AMinerCharacter::EndCharging()
 	UE_LOG(LogTemp, Display, TEXT("Start Digging, Charged : %f"), ChargedTime);
 
 	PlayAnimMontage(KneeDownAnimMontage);
+	
+	// GameMode Score Function (ChargingTime);
 }
 
 void AMinerCharacter::Move(const FInputActionValue& Value)

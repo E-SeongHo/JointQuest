@@ -5,6 +5,8 @@
 #include "GameFramework/Character.h"
 #include "MinerCharacter.generated.h"
 
+class AMinerPlayerController;
+
 UCLASS()
 class JOINTQUEST_API AMinerCharacter : public ACharacter
 {
@@ -13,7 +15,7 @@ public:
 	AMinerCharacter();
 
 protected:
-	virtual void BeginPlay() override;
+	virtual auto BeginPlay() -> void override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -62,6 +64,9 @@ private:
 
 	FTimerHandle ChargingTimerHandle;
 
+	AMinerPlayerController* PlayerController;
 	bool bIsCharging = false;
+	
 	float ChargedTime = 0.0f;
+
 };
