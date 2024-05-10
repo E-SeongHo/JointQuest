@@ -13,6 +13,10 @@ class JOINTQUEST_API ADiggingSoilGameMode : public AGameModeBase
 public:
 	ADiggingSoilGameMode();
 
+	virtual void BeginPlay() override;
+
+	void ExecuteTrackingProcess();
+
 	void AwardPoints(int32 Points);
 	int32 GetScore(int32 Score) const;
 	

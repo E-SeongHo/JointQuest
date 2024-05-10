@@ -15,6 +15,8 @@ enum class EJointTrackingStatus : uint8
 	Falling // When the knee is lowered below the UpperBoundRate
 };
 
+class UNetworkHandler;
+
 UCLASS()
 class JOINTQUEST_API AMinerPlayerController : public APlayerController
 {
@@ -23,8 +25,8 @@ class JOINTQUEST_API AMinerPlayerController : public APlayerController
 public:
 	AMinerPlayerController();
 
-	virtual void PlayerTick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+	virtual void PlayerTick(float DeltaSeconds) override;
 	EJointTrackingStatus GetCurrentStatus() const;
 
 private:
@@ -33,16 +35,17 @@ private:
 private:
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> GamePlayWidget;
-	
-	// Moves Score Logic to the GameMode 
-	float PlayerScore = 0.0f;
+
+	UNetworkHandler* NetWorkHandler;
 
 	EJointTrackingStatus CurrentStatus;
 	// joint tracking data
 
+	// player information
+	float PlayerLimitAngle = 90.0f;
+	
 	// thresholds to play animation
 	float UpperBoundRate = 0.7f;
 	float LowerBoundRate = 0.7f;
 	
-	float HoldingTime = 1.0f;
 };

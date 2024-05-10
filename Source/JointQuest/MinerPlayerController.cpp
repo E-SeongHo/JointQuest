@@ -2,6 +2,7 @@
 
 #include "MinerPlayerController.h"
 
+#include "NetworkHandler.h"
 #include "Blueprint/UserWidget.h"
 
 AMinerPlayerController::AMinerPlayerController()
@@ -10,7 +11,24 @@ AMinerPlayerController::AMinerPlayerController()
 	
 }
 
+void AMinerPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
 
+	NetWorkHandler = NewObject<UNetworkHandler>(this);
+
+	if(NetWorkHandler->Connect(TEXT("127.0.0.1"), 7777))
+	{
+		UE_LOG(LogTemp, Display, TEXT("connected to the socket"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("failed to connect socket"));
+	}
+	
+	UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
+	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();
+}
 
 void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 {
@@ -48,13 +66,6 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	}
 }
 
-void AMinerPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
-	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();
-}
 
 EJointTrackingStatus AMinerPlayerController::GetCurrentStatus() const
 {
@@ -63,5 +74,7 @@ EJointTrackingStatus AMinerPlayerController::GetCurrentStatus() const
 
 void AMinerPlayerController::ProcessKneeTracking()
 {
-	// will be implemented
+	//NetWorkHandler->ReceiveData();
+
+	
 }

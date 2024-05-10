@@ -24,7 +24,8 @@ public:
 
 private:
 	void GenerateSoils();
-
+	void RearrangeSoils();
+	
 public:
 	TQueue<AMovableActor*> LeftSoilsQueue;
 	TQueue<AMovableActor*> RightSoilsQueue;
@@ -56,4 +57,8 @@ private:
 	TSubclassOf<AMovableActor> BackBlockTemplate;
 
 	FVector RefLocation;
+
+	AMovableActor* TailPtr = nullptr;
+
+	float RearrangeHeight = -4000.0f;
 };

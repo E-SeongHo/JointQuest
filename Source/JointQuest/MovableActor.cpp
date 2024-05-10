@@ -35,6 +35,8 @@ void AMovableActor::Tick(float DeltaTime)
 			SetActorLocation(InterpedLocation);
 		}
 	}
+
+	
 }
 
 void AMovableActor::LiftUp(float MoveAmount, float MoveSpeed)

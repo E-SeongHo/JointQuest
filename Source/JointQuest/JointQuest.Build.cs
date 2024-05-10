@@ -11,7 +11,8 @@ public class JointQuest : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", 
-			"HeadMountedDisplay", "EnhancedInput", "UMG"
+			"HeadMountedDisplay", "EnhancedInput", "UMG",
+			"Networking", "Sockets"
 		});
 	}
 }

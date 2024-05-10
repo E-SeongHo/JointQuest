@@ -61,7 +61,7 @@ void AMinerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// FSM
-	UE_LOG(LogTemp, Display, TEXT("Current Tracking Status : %d"), PlayerController->GetCurrentStatus());
+	//UE_LOG(LogTemp, Display, TEXT("Current Tracking Status : %d"), PlayerController->GetCurrentStatus());
 
 	switch(PlayerController->GetCurrentStatus())
 	{
@@ -148,15 +148,14 @@ void AMinerCharacter::StopJumping()
 
 void AMinerCharacter::DigGround()
 {
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	PC->ClientStartCameraShake(DiggingShake);
+	PlayerController->ClientStartCameraShake(DiggingShake);
 
 	for(AActor* MovableActor : MovableActors)
 	{
 		AMovableActor* MovingActor = Cast<AMovableActor>(MovableActor);
-		MovingActor->LiftUp(500.0f, 50.0f);
+		MovingActor->LiftUp(500.0f * 4.0f, 50.0f);
 	}
-
+	
 	ChargedTime = 0.0f;
 }
 

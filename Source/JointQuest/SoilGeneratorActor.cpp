@@ -34,11 +34,6 @@ void ASoilGeneratorActor::BeginPlay()
 	RightGenPos = {RefLocation.X ,RefLocation.Y - (HalfWidth + 100.0f)};
 	BackGenPos = {RefLocation.X - HalfDepth * 2 - 100.0f,0.0f};
 	
-	/*
-	LeftGenPos = {-95.000000,1155.000000};
-	RightGenPos = {-95.000000,-1155.000000};
-	BackGenPos = {-696.000000,0.000000};*/
-
 	GenerateSoils();
 }
 
@@ -46,13 +41,20 @@ void ASoilGeneratorActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	check(TailPtr);
+	UE_LOG(LogTemp, Display, TEXT("Tail Z : %s"), *TailPtr->GetActorLocation().ToString());
+	
+	if(TailPtr->GetActorLocation().Z > RearrangeHeight)
+	{
+		RearrangeSoils();
+	}
 }
 
 void ASoilGeneratorActor::GenerateSoils()
 {
 	AMovableActor** PeekPtr = LeftSoilsQueue.Peek();
 	AMovableActor* PeekElem = PeekPtr ? *PeekPtr : nullptr;
-
+	
 	//float CurrentHeight = PeekElem ? PeekElem->GetActorLocation().Z : 3427.0f;
 	float CurrentHeight = PeekElem ? PeekElem->GetActorLocation().Z : RefLocation.Z + 2100.0f;
 
@@ -90,5 +92,43 @@ void ASoilGeneratorActor::GenerateSoils()
 		BackSoilsQueue.Enqueue(Cast<AMovableActor>(BackGen));
 
 		GeneratedBlocks++;
+
+		if(i == GenAmount - 1)
+		{
+			TailPtr = Cast<AMovableActor>(BackGen);
+		}
+	}
+}
+
+void ASoilGeneratorActor::RearrangeSoils()
+{
+	UE_LOG(LogTemp, Display, TEXT("Rearragne Soils"));
+
+	int FixNums = 4;
+	float CurrentHeight = TailPtr->GetActorLocation().Z;
+
+	for(int32 i = 0; i < GenAmount - FixNums; i++)
+	{
+		float TargetHeight = CurrentHeight - ((i+1) * BlockHeight);
+
+		FVector LeftSideSpawnLocation(LeftGenPos.X, LeftGenPos.Y, TargetHeight);
+		FVector RightSideSpawnLocation(RightGenPos.X, RightGenPos.Y, TargetHeight);
+		FVector BackSideSpawnLocation(BackGenPos.X, BackGenPos.Y, TargetHeight);
+		
+		AMovableActor* Temp;
+
+		LeftSoilsQueue.Dequeue(Temp);
+		Temp->SetActorLocation(LeftSideSpawnLocation);
+		LeftSoilsQueue.Enqueue(Temp);
+
+		RightSoilsQueue.Dequeue(Temp);
+		Temp->SetActorLocation(RightSideSpawnLocation);
+		RightSoilsQueue.Enqueue(Temp);
+
+		BackSoilsQueue.Dequeue(Temp);
+		Temp->SetActorLocation(BackSideSpawnLocation);
+		BackSoilsQueue.Enqueue(Temp);
+
+		TailPtr = Temp;
 	}
 }
