@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DigGround();
 
+	UFUNCTION(BlueprintCallable)
+	float GetHoldingProgressPercent() const;
+
 private:
 	void Move(const struct FInputActionValue& Value);
 	virtual void StopJumping() override;
@@ -68,5 +71,5 @@ private:
 	bool bIsCharging = false;
 	
 	float ChargedTime = 0.0f;
-
+	float ChargeLimit = 1.0f; 
 };

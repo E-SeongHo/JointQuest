@@ -8,6 +8,14 @@ ADiggingSoilGameMode::ADiggingSoilGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
 
-	
+void ADiggingSoilGameMode::AwardPoints(int32 Points)
+{
+	CurrentScore += Points;
+}
+
+int32 ADiggingSoilGameMode::GetScore(int32 Score) const
+{
+	return CurrentScore;
 }

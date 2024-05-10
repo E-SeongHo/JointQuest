@@ -23,14 +23,17 @@ class JOINTQUEST_API AMinerPlayerController : public APlayerController
 public:
 	AMinerPlayerController();
 
-	virtual void Tick(float DeltaSeconds) override;
-
+	virtual void PlayerTick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
 	EJointTrackingStatus GetCurrentStatus() const;
 
 private:
 	void ProcessKneeTracking();
 	
 private:
+	UPROPERTY(EditAnyWhere)
+	TSubclassOf<UUserWidget> GamePlayWidget;
+	
 	// Moves Score Logic to the GameMode 
 	float PlayerScore = 0.0f;
 

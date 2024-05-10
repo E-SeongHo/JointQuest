@@ -13,6 +13,9 @@ class JOINTQUEST_API ADiggingSoilGameMode : public AGameModeBase
 public:
 	ADiggingSoilGameMode();
 
-private:
+	void AwardPoints(int32 Points);
+	int32 GetScore(int32 Score) const;
 	
+private:
+	float CurrentScore = 0.0f;
 };

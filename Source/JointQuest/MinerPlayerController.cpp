@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MinerPlayerController.h"
+
+#include "Blueprint/UserWidget.h"
 
 AMinerPlayerController::AMinerPlayerController()
 {
@@ -9,9 +10,11 @@ AMinerPlayerController::AMinerPlayerController()
 	
 }
 
-void AMinerPlayerController::Tick(float DeltaSeconds)
+
+
+void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 {
-	Super::Tick(DeltaSeconds);
+	Super::PlayerTick(DeltaSeconds);
 
 	// IPC ( with Mediapipe )
 	// reads joint tracking data
@@ -43,7 +46,14 @@ void AMinerPlayerController::Tick(float DeltaSeconds)
 		CurrentStatus = EJointTrackingStatus::Standing; 
 		ElapsedTime = 0.0f;
 	}
-	
+}
+
+void AMinerPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
+	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();
 }
 
 EJointTrackingStatus AMinerPlayerController::GetCurrentStatus() const

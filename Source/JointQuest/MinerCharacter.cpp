@@ -160,4 +160,15 @@ void AMinerCharacter::DigGround()
 	ChargedTime = 0.0f;
 }
 
+float AMinerCharacter::GetHoldingProgressPercent() const
+{
+	if(PlayerController->GetCurrentStatus() == EJointTrackingStatus::Rising ||
+		PlayerController->GetCurrentStatus() == EJointTrackingStatus::Holding)
+	{
+		return ChargedTime / ChargeLimit;
+	}
+
+	return 0.0f;
+}
+
 
