@@ -22,7 +22,7 @@ public:
 
 	virtual bool StartReceiver(
 		const FString& SocketName,
-		const FIPv4Address& Address,
+		const FString& Address,
 		const int32 Port
 	) override;
 

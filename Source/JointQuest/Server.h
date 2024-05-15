@@ -28,12 +28,14 @@ public:
 
 	virtual void Listen();
 
+	UFUNCTION(BlueprintCallable)
 	virtual bool StartReceiver(
 		const FString& SocketName,
-		const FIPv4Address& Address,
+		const FString& Address,
 		const int32 Port
 	);
 
+	UFUNCTION(BlueprintCallable)
 	virtual void EndReceiver();
 
 protected:

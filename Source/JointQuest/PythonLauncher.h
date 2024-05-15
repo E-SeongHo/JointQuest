@@ -26,6 +26,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	TFuture<void> LaunchThread;
 
 public:	
 	// Called every frame

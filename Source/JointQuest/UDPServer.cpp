@@ -21,10 +21,14 @@ void AUDPServer::EndReceiver()
 
 bool AUDPServer::StartReceiver(
 	const FString& SocketName,
-	const FIPv4Address& Address,
+	const FString& Address,
 	const int32 Port
 ) {
-	FIPv4Endpoint Endpoint(Address, Port);
+
+
+	FIPv4Address IPAddr;
+	FIPv4Address::Parse(Address, IPAddr);
+	FIPv4Endpoint Endpoint(IPAddr, Port);
 
 	int32 BufferSize = 2 * 1024 * 1024;
 

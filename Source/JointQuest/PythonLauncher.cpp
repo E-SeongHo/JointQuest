@@ -17,7 +17,10 @@ void APythonLauncher::Launch(FString LaunchPath) {
 	FString command = FString(TEXT("python \""));
 	command.Append(LaunchPath);
 	command.Append("\"");
-	system(TCHAR_TO_UTF8(*command));
+
+	auto res = Async(EAsyncExecution::Thread, [&, command]() {
+		system(TCHAR_TO_UTF8(*command));
+		});
 	//UE_LOG(LogCustom, Log, TEXT("EXEC %s"), *command);
 }
 

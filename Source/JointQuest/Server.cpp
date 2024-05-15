@@ -14,7 +14,7 @@ AServer::AServer()
 
 bool AServer::StartReceiver(
 	const FString& SocketName,
-	const FIPv4Address& Address,
+	const FString& Address,
 	const int32 Port
 ){
 	return false;
@@ -27,6 +27,7 @@ void AServer::EndReceiver() {
 	{
 		Socket->Close();
 		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
+		Socket = nullptr;
 	}
 }
 
