@@ -8,8 +8,9 @@
 
 //DECLARE_LOG_CATEGORY_EXTERN(LogCustom, Log, All);
 
-UCLASS()
-class JOINTQUEST_API APythonLauncher : public AActor
+
+UCLASS(ClassGroup = "Transport", meta = (BlueprintSpawnableComponent))
+class JOINTQUEST_API UPythonLauncher : public UActorComponent
 {
 	GENERATED_BODY()
 	
@@ -18,7 +19,7 @@ public:
 	FString Path;
 
 	// Sets default values for this actor's properties
-	APythonLauncher();
+	UPythonLauncher(const FObjectInitializer& init);
 
 	void Launch(FString LaunchPath);
 
@@ -28,8 +29,5 @@ protected:
 
 	TFuture<void> LaunchThread;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };
