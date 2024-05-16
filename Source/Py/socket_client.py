@@ -65,6 +65,7 @@ class ClientSocket:
                 data = self.sock.recv(1024).decode().strip()
                 if not data:
                     break
+                print(">>", data, del=" ")
                 json_data = json.loads(data)
                 command = json_data["command"]
                 if command == '0':

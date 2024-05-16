@@ -19,6 +19,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static FString BytestreamToString(TArray<uint8> bytes);
 
+
+	UFUNCTION(BlueprintCallable)
+	static TArray<uint8> StringToBytestream(FString text);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -37,3 +37,12 @@ FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
 	return FString(bytes.Num(), UTF8_TO_TCHAR(bytes.GetData()));
 }
 
+
+TArray<uint8> ATransportManager::StringToBytestream(FString text) {
+	TArray<uint8> res;
+	const int32 len = FTCHARToUTF8_Convert::ConvertedLength(*text, text.Len());
+	res.SetNumUninitialized(len);
+	FTCHARToUTF8_Convert::Convert((UTF8CHAR*)res.GetData(), res.Num(), *text, text.Len());
+
+	return res;
+}
