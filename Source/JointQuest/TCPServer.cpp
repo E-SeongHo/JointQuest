@@ -15,7 +15,7 @@ bool ATCPServer::StartReceiver(
 ) {
 
 	UE_LOG(LogTemp, Warning, TEXT("Init"));
-	uint32 BufferSize = 2 * 1024 * 1024;
+	uint32 BufferSize = 32 * 1024;
 	int32 temp;
 
 	FIPv4Address IPAddr;
