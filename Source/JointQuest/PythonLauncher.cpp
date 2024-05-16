@@ -17,16 +17,33 @@ void UPythonLauncher::Launch(FString LaunchPath) {
 
 	auto res = Async(EAsyncExecution::Thread, [&, command]() {
 		system(TCHAR_TO_UTF8(*command));
+		AsyncTask(ENamedThreads::GameThread, [&]()
+			{
+				OnScriptEnd.Broadcast();
+			});
 		});
+	OnScriptBegin.Broadcast();
 	//UE_LOG(LogCustom, Log, TEXT("EXEC %s"), *command);
+}
+
+FString UPythonLauncher::GetRootPath() {
+	return SearchFromSource ? FPaths::GameSourceDir() : FPlatformProcess::BaseDir();
+}
+
+void UPythonLauncher::Launch() {
+
+	FString path = GetRootPath();
+	path.Append(Path);
+	//UE_LOG(LogCustom, Log, TEXT("Path is %s"), *path);
+	Launch(path);
 }
 
 // Called when the game starts or when spawned
 void UPythonLauncher::BeginPlay()
 {
-	FString path = FPaths::GameSourceDir();//FPlatformProcess::BaseDir();
-	path.Append(Path);
-	//UE_LOG(LogCustom, Log, TEXT("Path is %s"), *path);
-	Launch(path);
+	Super::BeginPlay();
+	if (LaunchImmediately) {
+		Launch();
+	}
 }
 
