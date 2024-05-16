@@ -39,11 +39,12 @@ void AMovableActor::Tick(float DeltaTime)
 	
 }
 
-void AMovableActor::LiftUp(float MoveAmount, float MoveSpeed)
+void AMovableActor::LiftUp(float MoveAmount, float MoveSpeed, float Duration)
 {
 	FVector current = GetActorLocation();
 	FVector goal = current + FVector(0.0f, 0.0f, MoveAmount);
 
+	MoveDuration = Duration;
 	StartLocation = current;
 	TargetLocation = goal;
 	Speed = MoveSpeed;

@@ -42,7 +42,7 @@ void ASoilGeneratorActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	check(TailPtr);
-	UE_LOG(LogTemp, Display, TEXT("Tail Z : %s"), *TailPtr->GetActorLocation().ToString());
+	//UE_LOG(LogTemp, Display, TEXT("Tail Z : %s"), *TailPtr->GetActorLocation().ToString());
 	
 	if(TailPtr->GetActorLocation().Z > RearrangeHeight)
 	{
@@ -61,9 +61,6 @@ void ASoilGeneratorActor::GenerateSoils()
 	FVector LeftSideSpawnLocation(LeftGenPos.X, LeftGenPos.Y, 0.0f);
 	FVector RightSideSpawnLocation(RightGenPos.X, RightGenPos.Y, 0.0f);
 	FVector BackSideSpawnLocation(BackGenPos.X, BackGenPos.Y, 0.0f);
-
-	UE_LOG(LogTemp, Display, TEXT("%s"), *LeftGenPos.ToString());
-	UE_LOG(LogTemp, Display, TEXT("%s"), *LeftSideSpawnLocation.ToString());
 	
 	for(int32 i = 0; i < GenAmount; i++)
 	{

@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "JointQuestGameMode.h"
-#include "JointQuestCharacter.h"
+#include "../Actor/JointQuestCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AJointQuestGameMode::AJointQuestGameMode()

@@ -18,7 +18,7 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	void LiftUp(float MoveAmount, float MoveSpeed);
+	void LiftUp(float MoveAmount, float MoveSpeed, float Duration);
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))

@@ -2,7 +2,8 @@
 
 #include "MinerPlayerController.h"
 
-#include "NetworkHandler.h"
+#include "../GameplayWidget.h"
+#include "../NetworkHandler.h"
 #include "Blueprint/UserWidget.h"
 
 AMinerPlayerController::AMinerPlayerController()

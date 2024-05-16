@@ -6,6 +6,10 @@
 #include "MinerCharacter.generated.h"
 
 class AMinerPlayerController;
+class USceneCaptureComponent2D;
+class ADiggingSoilGameMode;
+class UNiagaraSystem; 
+
 
 UCLASS()
 class JOINTQUEST_API AMinerCharacter : public ACharacter
@@ -37,6 +41,7 @@ public:
 private:
 	void Move(const struct FInputActionValue& Value);
 	virtual void StopJumping() override;
+	void TriggerDiggingNiagaraEffect(float Duration);
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -44,7 +49,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -62,12 +67,20 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = CameraShake, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> DiggingShake;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Effect, meta = (AllowPrivateAccess = "true"))
+	UNiagaraSystem* DiggingEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Effect, meta = (AllowPrivateAccess = "true"))
+	FVector EffectOffset;
 	
 	TArray<AActor*> MovableActors;
 
 	FTimerHandle ChargingTimerHandle;
 
 	AMinerPlayerController* PlayerController;
+	ADiggingSoilGameMode* GameMode;
+	
 	bool bIsCharging = false;
 	
 	float ChargedTime = 0.0f;

@@ -1,6 +1,8 @@
 
 
 #include "MinerCharacter.h"
+
+#include "../GameMode/DiggingSoilGameMode.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,11 +11,15 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "MinerPlayerController.h"
+#include "../PlayerController/MinerPlayerController.h"
 #include "MovableActor.h"
 #include "NetworkMessage.h"
 #include "Kismet/GameplayStatics.h"
-#include "SoilGenerator.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
+#include "NiagaraComponent.h"
+#include "../SoilGenerator.h"
+#include "Components/SceneCaptureComponent2D.h"
 
 AMinerCharacter::AMinerCharacter()
 {
@@ -36,7 +42,7 @@ AMinerCharacter::AMinerCharacter()
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 }
 
 void AMinerCharacter::BeginPlay()
@@ -44,16 +50,17 @@ void AMinerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMovableActor::StaticClass(), MovableActors);
+
 	PlayerController = Cast<AMinerPlayerController>(Controller);
+	checkf(PlayerController, TEXT("Set PlayerController as MinerPlayerController"));
 	
-	if (PlayerController)
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
 
+	GameMode = Cast<ADiggingSoilGameMode>(UGameplayStatics::GetGameMode(this));
+	checkf(GameMode, TEXT("Set Game Mode as DiggingSoilGameMode"));
 }
 
 void AMinerCharacter::Tick(float DeltaTime)
@@ -120,8 +127,6 @@ void AMinerCharacter::EndCharging()
 	UE_LOG(LogTemp, Display, TEXT("Start Digging, Charged : %f"), ChargedTime);
 
 	PlayAnimMontage(KneeDownAnimMontage);
-	
-	// GameMode Score Function (ChargingTime);
 }
 
 void AMinerCharacter::Move(const FInputActionValue& Value)
@@ -146,17 +151,47 @@ void AMinerCharacter::StopJumping()
 
 }
 
+void AMinerCharacter::TriggerDiggingNiagaraEffect(float Duration)
+{
+	checkf(DiggingEffect, TEXT("Digging Effect hasn't been bound"));
+
+	FVector SpawnLocation;
+	UNiagaraComponent* NiagaraComponent;
+
+	// right side of the character
+	SpawnLocation = GetActorLocation() + EffectOffset;
+	NiagaraComponent =
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
+	NiagaraComponent->SetFloatParameter(TEXT("Lifetime"), Duration);
+	NiagaraComponent->SetAutoDestroy(true);
+	
+	// left side of the character
+	SpawnLocation = GetActorLocation() + EffectOffset - FVector(0.0f, 2*EffectOffset.Y - 20.0f, 0.0f);
+	NiagaraComponent =
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
+	NiagaraComponent->SetFloatParameter(TEXT("Lifetime"), Duration);
+	NiagaraComponent->SetAutoDestroy(true);
+}
+
 void AMinerCharacter::DigGround()
 {
 	PlayerController->ClientStartCameraShake(DiggingShake);
+	UE_LOG(LogTemp, Warning, TEXT("Shaking"));
 
+	float MoveDuration = 1.5f; // hack
+	
 	for(AActor* MovableActor : MovableActors)
 	{
 		AMovableActor* MovingActor = Cast<AMovableActor>(MovableActor);
-		MovingActor->LiftUp(500.0f * 4.0f, 50.0f);
+		MovingActor->LiftUp(500.0f * 4.0f, 50.0f, MoveDuration);
 	}
 	
+	GameMode->AwardPoints(ChargedTime * 10.0f);
 	ChargedTime = 0.0f;
+
+	UE_LOG(LogTemp, Display, TEXT("Current Points : %d"), GameMode->GetScore());
+	
+	TriggerDiggingNiagaraEffect(MoveDuration + 0.5f);
 }
 
 float AMinerCharacter::GetHoldingProgressPercent() const

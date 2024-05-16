@@ -18,7 +18,9 @@ public:
 	void ExecuteTrackingProcess();
 
 	void AwardPoints(int32 Points);
-	int32 GetScore(int32 Score) const;
+
+	UFUNCTION(BlueprintCallable, Category = "GameMode")
+	int32 GetScore() const;
 	
 private:
 	float CurrentScore = 0.0f;
