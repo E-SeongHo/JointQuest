@@ -46,3 +46,57 @@ TArray<uint8> ATransportManager::StringToBytestream(FString text) {
 
 	return res;
 }
+
+TSharedPtr<FJsonObject> ATransportManager::ParseJson(FString text) {
+	TSharedPtr<FJsonObject> res;
+	auto Reader = TJsonReaderFactory<>::Create(text);
+	if (FJsonSerializer::Deserialize(Reader, res)) {
+		return res;
+	}
+	return nullptr;
+}
+
+FString ATransportManager::GetEncodedImage(TSharedPtr<FJsonObject> json) {
+	FString res;
+	if (json->TryGetStringField("image", res)) {
+		return res;
+	}
+
+	return TEXT("");
+}
+
+UTexture2D* ATransportManager::GetEncodedImage(FString text) {
+	return DecodeImage(GetEncodedImage(ParseJson(text)));
+}
+
+UTexture2D* ATransportManager::DecodeImage(FString text) {
+	TArray<uint8> buffer;
+	FString left, right;
+	
+	text.Split(TEXT(","), &left, &right);
+	
+	if (right == "") {
+		return nullptr;
+	}
+
+	bool isDecode = FBase64::Decode(right, buffer);
+	if (isDecode) {
+		return CreateTextureFromBits(buffer);
+	}
+	else {
+		return nullptr;
+	}
+}
+
+UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
+	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
+	
+	res->MipGenSettings = TMGS_NoMipmaps;
+	res->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap;
+	res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
+	res->SRGB = false;
+	res->Filter = TextureFilter::TF_Nearest;
+	res->UpdateResource();
+
+	return res;
+}

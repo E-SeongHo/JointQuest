@@ -2,9 +2,12 @@
 
 #pragma once
 
+#include "ImageUtils.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TransportManager.generated.h"
+
+
 
 UCLASS()
 class JOINTQUEST_API ATransportManager : public AActor
@@ -23,9 +26,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static TArray<uint8> StringToBytestream(FString text);
 
+	UFUNCTION(BlueprintCallable)
+	static UTexture2D* GetEncodedImage(FString text);
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	static TSharedPtr<FJsonObject> ParseJson(FString text);
+
+	static FString GetEncodedImage(TSharedPtr<FJsonObject> json);
+
+	static UTexture2D* DecodeImage(FString text);
+
+	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
 
 public:	
 	// Called every frame
