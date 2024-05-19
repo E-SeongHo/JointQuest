@@ -13,7 +13,7 @@ public class JointQuest : ModuleRules
 			"Core", "CoreUObject", "Engine", "InputCore", 
 			"HeadMountedDisplay", "EnhancedInput", "UMG",
 			"Networking", "Sockets", "Slate", "SlateCore",
-			"Niagara"
+			"Niagara", "Json", "JsonUtilities"
 		});
 	}
 }
