@@ -24,14 +24,14 @@ void ASoilGeneratorActor::BeginPlay()
 	FVector CharacterLocation = UGameplayStatics::GetPlayerCharacter(this, 0)->GetActorLocation();
 	
 	AActor* Stage = GetWorld()->SpawnActor<AActor>(CharacterStage,
-			CharacterLocation - FVector(0.0f, 7.5f, 2 * HalfWidth + 50.0f), 
+			CharacterLocation - FVector(0.0f, -15.0f, 2 * HalfWidth + 50.0f), 
 			FRotator::ZeroRotator);
 
 	RefLocation = Stage->GetActorLocation();
 	
 	// hack : for test
-	LeftGenPos = {RefLocation.X, RefLocation.Y + HalfWidth + 70.0f};
-	RightGenPos = {RefLocation.X ,RefLocation.Y - HalfWidth - 70.0f};
+	LeftGenPos = {RefLocation.X, RefLocation.Y + HalfWidth + 60.0f};
+	RightGenPos = {RefLocation.X ,RefLocation.Y - HalfWidth - 60.0f};
 	BackGenPos = {RefLocation.X - HalfDepth * 2 - 100.0f,0.0f};
 	
 	GenerateSoils();
