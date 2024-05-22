@@ -191,7 +191,7 @@ void AMinerCharacter::DigGround()
 
 	UE_LOG(LogTemp, Display, TEXT("Current Points : %d"), GameMode->GetScore());
 	
-	TriggerDiggingNiagaraEffect(MoveDuration + 0.5f);
+	TriggerDiggingNiagaraEffect(MoveDuration - 0.7f);
 }
 
 float AMinerCharacter::GetHoldingProgressPercent() const
