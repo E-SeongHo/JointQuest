@@ -9,13 +9,14 @@
 UENUM(BlueprintType)
 enum class EJointTrackingStatus : uint8
 {
-	Standing,
-	Rising, // When the knee is raised above the LowerBoundRate
-	Holding,
-	Falling // When the knee is lowered below the UpperBoundRate
+	Standing, // <= LowerBoundRate
+	Rising, // > LowerBoundRate
+	Holding, // >= UpperBoundRate
+	Falling // < UpperBoundRate
 };
 
 class UNetworkHandler;
+class UScoreComponent;
 
 UCLASS()
 class JOINTQUEST_API AMinerPlayerController : public APlayerController
@@ -28,24 +29,34 @@ public:
 	virtual void BeginPlay() override;
 	virtual void PlayerTick(float DeltaSeconds) override;
 	EJointTrackingStatus GetCurrentStatus() const;
+	float GetPeakAngle() const;
 
-private:
-	void ProcessKneeTracking();
+	UScoreComponent* GetScoreComponent() const;
+	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
 	
 private:
+	void ProcessKneeTracking();
+	float GetCurrentAngle();
+	
+private:
+	UScoreComponent* ScoreComp;
+	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> GamePlayWidget;
 
+	UPROPERTY(EditAnyWhere)
+	TSubclassOf<UUserWidget> RecordChartWidget;
+	
 	UNetworkHandler* NetWorkHandler;
 
-	EJointTrackingStatus CurrentStatus;
 	// joint tracking data
+	EJointTrackingStatus CurrentStatus;
 
 	// player information
 	float PlayerLimitAngle = 90.0f;
+	float PlayerPeakAngle = 0.0f; // reset every reps
 	
 	// thresholds to play animation
-	float UpperBoundRate = 0.7f;
-	float LowerBoundRate = 0.7f;
-	
+	float LowerBoundRate = 0.2f;
+	float UpperBoundRate = 0.8f;
 };

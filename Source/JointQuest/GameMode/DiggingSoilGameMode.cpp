@@ -1,6 +1,10 @@
 
 #include "DiggingSoilGameMode.h"
 
+#include "JointQuest/Actor/ScoreComponent.h"
+#include "JointQuest/PlayerController/MinerPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+
 ADiggingSoilGameMode::ADiggingSoilGameMode()
 {
 }
@@ -40,12 +44,8 @@ void ADiggingSoilGameMode::ExecuteTrackingProcess()
 	}
 }
 
-void ADiggingSoilGameMode::AwardPoints(int32 Points)
-{
-	CurrentScore += Points;
-}
-
 int32 ADiggingSoilGameMode::GetScore() const
 {
-	return CurrentScore;
+	AMinerPlayerController* PC = Cast<AMinerPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	return PC->GetScoreComponent()->GetCurrentScore(); 
 }
