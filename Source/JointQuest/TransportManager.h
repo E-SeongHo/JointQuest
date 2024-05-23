@@ -31,15 +31,20 @@ public:
 	static UTexture2D* DecodeImage(FString text);
 
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
+	static float JointAngle;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	static float GetJointAngle();
+
+	UFUNCTION(BlueprintCallable)
+	static void SetJointAngle(float value);
 };

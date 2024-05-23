@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "../Widget/GraphWidget.h"
 #include "JointQuest/Actor/ScoreComponent.h"
+#include "JointQuest/TransportManager.h"
 
 AMinerPlayerController::AMinerPlayerController()
 {
@@ -150,5 +151,5 @@ void AMinerPlayerController::ProcessKneeTracking()
 float AMinerPlayerController::GetCurrentAngle()
 {
 	// Json parsing
-	return 0.0f;
+	return ATransportManager::GetJointAngle();//0.0f;
 }  

@@ -3,12 +3,14 @@
 
 #include "TransportManager.h"
 
+
+float ATransportManager::JointAngle = 0.0f;
+
 // Sets default values
 ATransportManager::ATransportManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -83,4 +85,12 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	res->UpdateResource();
 
 	return res;
+}
+
+float ATransportManager::GetJointAngle() {
+	return JointAngle;
+}
+
+void ATransportManager::SetJointAngle(float value){
+	JointAngle = value;
 }
