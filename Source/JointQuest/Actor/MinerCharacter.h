@@ -84,5 +84,5 @@ private:
 	bool bIsCharging = false;
 	
 	float ChargedTime = 0.0f;
-	float ChargeLimit = 1.0f; 
+	float MinChargeDuration = 1.0f; 
 };

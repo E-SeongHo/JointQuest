@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "DiggingSoilGameMode.generated.h"
 
+
+
 UCLASS()
 class JOINTQUEST_API ADiggingSoilGameMode : public AGameModeBase
 {
@@ -16,12 +18,7 @@ public:
 	virtual void BeginPlay() override;
 
 	void ExecuteTrackingProcess();
-
-	void AwardPoints(int32 Points);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "GameMode")
 	int32 GetScore() const;
-	
-private:
-	float CurrentScore = 0.0f;
 };

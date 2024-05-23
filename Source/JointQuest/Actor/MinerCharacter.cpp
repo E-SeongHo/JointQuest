@@ -18,6 +18,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraComponent.h"
+#include "ScoreComponent.h"
 #include "../SoilGenerator.h"
 #include "Components/SceneCaptureComponent2D.h"
 
@@ -74,16 +75,15 @@ void AMinerCharacter::Tick(float DeltaTime)
 	{
 	case EJointTrackingStatus::Standing:
 		break;
-	case EJointTrackingStatus::Rising: // starts charging (play animation)
-		if(!bIsCharging) BeginCharging();
+	case EJointTrackingStatus::Rising:
 		break;
-	case EJointTrackingStatus::Holding: 
+	case EJointTrackingStatus::Holding: // starts charging (play animation)
+		if(!bIsCharging) BeginCharging();
 		break;
 	case EJointTrackingStatus::Falling: // quit charging (play animation)
 		if(bIsCharging) EndCharging();
 		break;
 	}
-	
 }
 
 void AMinerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -101,7 +101,7 @@ void AMinerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AMinerCharacter::BeginCharging()
 {
-	UE_LOG(LogTemp, Display, TEXT("Charging after : %d"), bIsCharging);
+	UE_LOG(LogTemp, Display, TEXT("Begin Charging"));
 
 	check(!bIsCharging);
 
@@ -124,9 +124,9 @@ void AMinerCharacter::EndCharging()
 	check(bIsCharging);
 	
 	bIsCharging = false;
-	UE_LOG(LogTemp, Display, TEXT("Start Digging, Charged : %f"), ChargedTime);
+	UE_LOG(LogTemp, Display, TEXT("Charging Ended, Charged : %fs"), ChargedTime);
 
-	PlayAnimMontage(KneeDownAnimMontage);
+	PlayAnimMontage(KneeDownAnimMontage);	
 }
 
 void AMinerCharacter::Move(const FInputActionValue& Value)
@@ -175,6 +175,16 @@ void AMinerCharacter::TriggerDiggingNiagaraEffect(float Duration)
 
 void AMinerCharacter::DigGround()
 {
+	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
+	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
+	
+	if(!bHasSucceeded)
+	{
+		StopAnimMontage();
+		ChargedTime = 0.0f;
+		return;
+	}
+	
 	PlayerController->ClientStartCameraShake(DiggingShake);
 	UE_LOG(LogTemp, Warning, TEXT("Shaking"));
 
@@ -186,7 +196,7 @@ void AMinerCharacter::DigGround()
 		MovingActor->LiftUp(500.0f * 4.0f, 50.0f, MoveDuration);
 	}
 	
-	GameMode->AwardPoints(ChargedTime * 10.0f);
+	PlayerController->GetScoreComponent()->AwardPoints(ChargedTime * 10.0f);
 	ChargedTime = 0.0f;
 
 	UE_LOG(LogTemp, Display, TEXT("Current Points : %d"), GameMode->GetScore());
@@ -199,7 +209,7 @@ float AMinerCharacter::GetHoldingProgressPercent() const
 	if(PlayerController->GetCurrentStatus() == EJointTrackingStatus::Rising ||
 		PlayerController->GetCurrentStatus() == EJointTrackingStatus::Holding)
 	{
-		return ChargedTime / ChargeLimit;
+		return ChargedTime / MinChargeDuration;
 	}
 
 	return 0.0f;
