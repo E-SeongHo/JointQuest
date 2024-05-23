@@ -49,7 +49,6 @@ TArray<uint8> ATransportManager::StringToBytestream(FString text) {
 
 UTexture2D* ATransportManager::DecodeImage(FString text) {
 
-	UE_LOG(LogTemp, Warning, TEXT("DecodeImage"));
 	TArray<uint8> buffer;
 
 	/*
@@ -74,7 +73,6 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 }
 
 UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
-	UE_LOG(LogTemp, Warning, TEXT("CreateTextureFromBits"));
 	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
 	
 	res->MipGenSettings = TMGS_NoMipmaps;
