@@ -40,14 +40,14 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 
 	// IPC ( with Mediapipe )
 	// reads joint tracking data
-	//ProcessKneeTracking();
+	ProcessKneeTracking();
 	
 	// temporary simulation code
 	static float ElapsedTime = 0.0f;
 	ElapsedTime += DeltaSeconds;
 
 	// reads data and sets status
-	/*if(ElapsedTime > 5.0f)
+	if(ElapsedTime > 5.0f)
 	{
 		ElapsedTime = 0.0f;
 		CurrentStatus = EJointTrackingStatus::Rising;
@@ -67,7 +67,7 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	{
 		CurrentStatus = EJointTrackingStatus::Standing; 
 		ElapsedTime = 0.0f;
-	}*/
+	}
 }
 
 

@@ -40,7 +40,7 @@ class ClientSocket:
             "body_length": None,
             "error": None
         }
-        self.webcam_index = 1
+        self.webcam_index = 0
         # 소켓 연결
         self.connection_attempts = 0
         self.sock = None
