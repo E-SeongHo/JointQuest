@@ -42,6 +42,8 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	// reads joint tracking data
 	ProcessKneeTracking();
 	
+	/*
+
 	// temporary simulation code
 	static float ElapsedTime = 0.0f;
 	ElapsedTime += DeltaSeconds;
@@ -68,6 +70,7 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 		CurrentStatus = EJointTrackingStatus::Standing; 
 		ElapsedTime = 0.0f;
 	}
+	*/
 }
 
 
