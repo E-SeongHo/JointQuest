@@ -5,6 +5,7 @@
 
 
 float ATransportManager::JointAngle = 0.0f;
+FString ATransportManager::UserData = TEXT("");
 
 // Sets default values
 ATransportManager::ATransportManager()
@@ -92,6 +93,10 @@ float ATransportManager::GetJointAngle() {
 }
 
 void ATransportManager::SetJointAngle(float value){
-	if (value < 0.0001) { return; }
+	if (value < 0.1) { return; }
 	JointAngle = value;
+}
+
+bool ATransportManager::HasUserData() {
+	return !UserData.IsEmpty();
 }

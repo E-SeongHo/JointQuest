@@ -37,6 +37,7 @@ protected:
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
 	static float JointAngle;
+	static FString UserData;
 
 public:	
 	// Called every frame
@@ -47,4 +48,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void SetJointAngle(float value);
+
+	UFUNCTION(BlueprintCallable)
+	static bool HasUserData();
+
+	UFUNCTION(BlueprintCallable)
+	static FString GetUserData();
+
+	UFUNCTION(BlueprintCallable)
+	static void SetUserData(FString data);
 };
