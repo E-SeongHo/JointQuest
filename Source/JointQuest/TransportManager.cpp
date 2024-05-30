@@ -104,3 +104,11 @@ void ATransportManager::SetJointAngle(float value){
 bool ATransportManager::HasUserData() {
 	return !UserData.IsEmpty();
 }
+
+void ATransportManager::SetUserData(FString data) {
+	UserData = data;
+}
+
+FString ATransportManager::GetUserData() {
+	return UserData;
+}
