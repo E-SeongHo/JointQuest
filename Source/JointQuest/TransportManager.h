@@ -37,7 +37,8 @@ protected:
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
 	static float JointAngle;
-	static FString UserData;
+	static float SubAngle1;
+	static float SubAngle2;
 
 public:	
 	// Called every frame
@@ -50,13 +51,16 @@ public:
 	static void SetJointAngle(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static bool HasUserData();
+	static float GetSubAngle1();
 
 	UFUNCTION(BlueprintCallable)
-	static FString GetUserData();
+	static void SetSubAngle1(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static void SetUserData(FString data);
+	static float GetSubAngle2();
+
+	UFUNCTION(BlueprintCallable)
+	static void SetSubAngle2(float value);
 
 	UFUNCTION(BlueprintCallable)
 	static bool SaveImage(UTexture2D* texture, const FString& path);

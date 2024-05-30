@@ -108,7 +108,7 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 void AMinerPlayerController::ProcessKneeTracking()
 {
 	//NetWorkHandler->ReceiveData();
-	const float CurrentAngle = GetCurrentAngle();
+	const float CurrentAngle = ATransportManager::GetJointAngle();
 	const float RaisedRate = CurrentAngle / PlayerLimitAngle;
 
 	PlayerSubAngle1 += 0.1f;
@@ -158,9 +158,3 @@ void AMinerPlayerController::ProcessKneeTracking()
 		}
 	}
 }
-
-float AMinerPlayerController::GetCurrentAngle()
-{
-	// Json parsing
-	return ATransportManager::GetJointAngle();//0.0f;
-}  

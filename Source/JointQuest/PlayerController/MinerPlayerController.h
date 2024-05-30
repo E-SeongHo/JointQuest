@@ -36,7 +36,6 @@ public:
 	
 private:
 	void ProcessKneeTracking();
-	float GetCurrentAngle();
 	
 private:
 	UScoreComponent* ScoreComp;

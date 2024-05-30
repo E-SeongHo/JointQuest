@@ -5,6 +5,8 @@
 
 
 float ATransportManager::JointAngle = 0.0f;
+float ATransportManager::SubAngle1 = 0.0f;
+float ATransportManager::SubAngle2 = 0.0f;
 FString ATransportManager::UserData = TEXT("");
 
 // Sets default values
@@ -96,17 +98,21 @@ void ATransportManager::SetJointAngle(float value){
 	if (value < 0.1) { return; }
 	JointAngle = value;
 }
-
-bool ATransportManager::HasUserData() {
-	return !UserData.IsEmpty();
+float ATransportManager::GetSubAngle1() {
+	return SubAngle1;
 }
 
-void ATransportManager::SetUserData(FString data) {
-	UserData = data;
+void ATransportManager::SetSubAngle1(float value) {
+	if (value < 0.1) { return; }
+	SubAngle1 = value;
+}
+float ATransportManager::GetSubAngle2() {
+	return SubAngle2;
 }
 
-FString ATransportManager::GetUserData() {
-	return UserData;
+void ATransportManager::SetSubAngle2(float value) {
+	if (value < 0.1) { return; }
+	SubAngle2 = value;
 }
 
 bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
