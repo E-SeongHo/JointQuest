@@ -178,6 +178,9 @@ void AMinerCharacter::DigGround()
 	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
 	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
 	
+	PlayerController->GetScoreComponent()->AwardPoints(ChargedTime * 10.0f);
+	UE_LOG(LogTemp, Display, TEXT("Current Points : %d"), GameMode->GetScore());
+
 	if(!bHasSucceeded)
 	{
 		StopAnimMontage();
@@ -196,11 +199,8 @@ void AMinerCharacter::DigGround()
 		MovingActor->LiftUp(500.0f * 4.0f, 50.0f, MoveDuration);
 	}
 	
-	PlayerController->GetScoreComponent()->AwardPoints(ChargedTime * 10.0f);
 	ChargedTime = 0.0f;
 
-	UE_LOG(LogTemp, Display, TEXT("Current Points : %d"), GameMode->GetScore());
-	
 	TriggerDiggingNiagaraEffect(MoveDuration - 0.7f);
 }
 

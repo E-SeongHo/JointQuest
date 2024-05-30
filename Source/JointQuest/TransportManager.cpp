@@ -92,5 +92,6 @@ float ATransportManager::GetJointAngle() {
 }
 
 void ATransportManager::SetJointAngle(float value){
+	if (value < 0.01f) { return; }
 	JointAngle = value;
 }

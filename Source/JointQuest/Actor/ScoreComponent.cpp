@@ -17,7 +17,7 @@ void UScoreComponent::RecordCurrentRep(bool bHasSucceeded)
 
 	ExerciseRecords.Add(NewRecord);
 
-	if(ExerciseRecords.Num() >= 5) PC->GameHasEnded(nullptr, false);
+	if(ExerciseRecords.Num() >= GoalReps) PC->GameHasEnded(nullptr, false);
 }
 
 void UScoreComponent::AwardPoints(int32 Points)

@@ -43,13 +43,12 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	ProcessKneeTracking();
 	
 	/*
-
 	// temporary simulation code
 	static float ElapsedTime = 0.0f;
 	ElapsedTime += DeltaSeconds;
 
 	// reads data and sets status
-	if(ElapsedTime > 5.0f)
+	/*if(ElapsedTime > 5.0f)
 	{
 		ElapsedTime = 0.0f;
 		CurrentStatus = EJointTrackingStatus::Rising;
@@ -72,7 +71,6 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	}
 	*/
 }
-
 
 EJointTrackingStatus AMinerPlayerController::GetCurrentStatus() const
 {
@@ -105,7 +103,6 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 		RecordWidget->Stride = static_cast<float>(x) / Records.Num();
 		RecordWidget->AddToViewport(999);
 	}
-	
 }
 
 void AMinerPlayerController::ProcessKneeTracking()
@@ -113,6 +110,17 @@ void AMinerPlayerController::ProcessKneeTracking()
 	//NetWorkHandler->ReceiveData();
 	const float CurrentAngle = GetCurrentAngle();
 	const float RaisedRate = CurrentAngle / PlayerLimitAngle;
+
+	PlayerSubAngle1 += 0.1f;
+	if(PlayerSubAngle1 >= 90.0f)
+	{
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
+		if(Widget != nullptr)
+		{
+			Widget->AddToViewport();
+		}
+		PlayerSubAngle1 = 0.0f;
+	}
 	
 	if (CurrentStatus == EJointTrackingStatus::Standing)
 	{
