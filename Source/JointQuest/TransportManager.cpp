@@ -93,11 +93,7 @@ float ATransportManager::GetJointAngle() {
 }
 
 void ATransportManager::SetJointAngle(float value){
-<<<<<<< HEAD
-	if (value < 0.01f) { return; }
-=======
 	if (value < 0.1) { return; }
->>>>>>> bb03d3aeb047827e4456314a973480d966e42d65
 	JointAngle = value;
 }
 
@@ -111,4 +107,29 @@ void ATransportManager::SetUserData(FString data) {
 
 FString ATransportManager::GetUserData() {
 	return UserData;
+}
+
+bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
+{
+	TArray<FColor> colors;
+
+	const FColor* FormatedImageData = static_cast<const FColor*>(texture->PlatformData->Mips[0].BulkData.LockReadOnly());
+
+	for (int32 Y = 0; Y < texture->GetSizeY(); Y++)
+	{
+		for (int32 X = 0; X < texture->GetSizeX(); X++)
+		{
+			FColor PixelColor = FormatedImageData[Y * texture->GetSizeX() + X];
+			colors.Add(PixelColor);
+		}
+	}
+
+	texture->PlatformData->Mips[0].BulkData.Unlock();
+
+	TArray<uint8> compressedBitmap;
+	FImageUtils::CompressImageArray(texture->GetSizeX(), texture->GetSizeY(), colors, compressedBitmap);
+
+	bool isSavedImage = FFileHelper::SaveArrayToFile(compressedBitmap, *path);
+
+	return isSavedImage;
 }

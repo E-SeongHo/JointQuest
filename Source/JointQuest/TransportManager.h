@@ -57,4 +57,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void SetUserData(FString data);
+
+	UFUNCTION(BlueprintCallable)
+	static bool SaveImage(UTexture2D* texture, const FString& path);
 };
