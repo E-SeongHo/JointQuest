@@ -30,8 +30,8 @@ void AMinerPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Display, TEXT("failed to connect socket"));
 	}
 	
-	UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
-	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();
+	/*UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
+	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();*/
 }
 
 void AMinerPlayerController::PlayerTick(float DeltaSeconds)
