@@ -82,6 +82,11 @@ float AMinerPlayerController::GetPeakAngle() const
 	return PlayerPeakAngle;
 }
 
+int32 AMinerPlayerController::GetFailedCnt() const
+{
+	return CntSubAngle1Failed + CntSubAngle2Failed;
+}
+
 UScoreComponent* AMinerPlayerController::GetScoreComponent() const
 {
 	return ScoreComp;
@@ -91,7 +96,9 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 {
 	Super::GameHasEnded(EndGameFocus, bIsWinner);
 
-	UGraphWidget* RecordWidget = Cast<UGraphWidget>(CreateWidget(this, RecordChartWidget));
+	// Load new Level
+	// And new level reads records from JointQuestGameInstance
+	/*UGraphWidget* RecordWidget = Cast<UGraphWidget>(CreateWidget(this, RecordChartWidget));
 	if(RecordWidget != nullptr)
 	{
 		TArray<FExerciseRecord> Records = ScoreComp->GetAllRecords();
@@ -102,7 +109,7 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 		RecordWidget->ViewPortSize = FVector2d(x, y);
 		RecordWidget->Stride = static_cast<float>(x) / Records.Num();
 		RecordWidget->AddToViewport(999);
-	}
+	}*/
 }
 
 void AMinerPlayerController::ProcessKneeTracking()
@@ -111,20 +118,34 @@ void AMinerPlayerController::ProcessKneeTracking()
 	const float CurrentAngle = ATransportManager::GetJointAngle();
 	const float RaisedRate = CurrentAngle / PlayerLimitAngle;
 
-	PlayerSubAngle1 += 0.1f;
-	if(PlayerSubAngle1 >= 90.0f)
+	// PlayerSubAngle1 허벅지와 종아리 안쪽 각도  70 <= x <= 100
+	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
 		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
 		if(Widget != nullptr)
 		{
 			Widget->AddToViewport();
 		}
-		PlayerSubAngle1 = 0.0f;
+		CntSubAngle1Failed++;
+	}
+	
+	// PlayerSubAngle2 골반과 허벅지의 수평방향 각도  80 <= x <= 110
+	if(PlayerSubAngle2 < 80.0f || PlayerSubAngle2 > 110.0f)
+	{
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
+		if(Widget != nullptr)
+		{
+			Widget->AddToViewport();
+		}
+		CntSubAngle2Failed++;
 	}
 	
 	if (CurrentStatus == EJointTrackingStatus::Standing)
 	{
 		PlayerPeakAngle = 0.0f;
+		CntSubAngle1Failed = 0;
+		CntSubAngle2Failed = 0;
+		
 		if(RaisedRate > LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Rising; 

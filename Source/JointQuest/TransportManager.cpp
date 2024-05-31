@@ -7,7 +7,7 @@
 float ATransportManager::JointAngle = 0.0f;
 float ATransportManager::SubAngle1 = 0.0f;
 float ATransportManager::SubAngle2 = 0.0f;
-FString ATransportManager::UserData = TEXT("");
+//FString ATransportManager::UserData = TEXT("");
 
 // Sets default values
 ATransportManager::ATransportManager()
@@ -96,6 +96,7 @@ float ATransportManager::GetJointAngle() {
 
 void ATransportManager::SetJointAngle(float value){
 	if (value < 0.1) { return; }
+	
 	JointAngle = value;
 }
 float ATransportManager::GetSubAngle1() {

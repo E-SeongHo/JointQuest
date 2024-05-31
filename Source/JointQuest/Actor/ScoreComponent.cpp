@@ -1,8 +1,9 @@
 // JNU-JointQuest
 
 #include "ScoreComponent.h"
-
+#include "../GameInstance/JointQuestGameInstance.h"
 #include "JointQuest/PlayerController/MinerPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 UScoreComponent::UScoreComponent()
 {
@@ -15,9 +16,12 @@ void UScoreComponent::RecordCurrentRep(bool bHasSucceeded)
 	AMinerPlayerController* PC = Cast<AMinerPlayerController>(GetOwner());
 	FExerciseRecord NewRecord(bHasSucceeded, PC->GetPeakAngle());
 
-	ExerciseRecords.Add(NewRecord);
+	GameInstance->RecordCurrentRep(NewRecord);
 
-	if(ExerciseRecords.Num() >= GoalReps) PC->GameHasEnded(nullptr, false);
+	if(GameInstance->GetRecords().Num() >= GoalReps)
+	{
+		PC->GameHasEnded(PC->GetOwner(), false);
+	}
 }
 
 void UScoreComponent::AwardPoints(int32 Points)
@@ -30,9 +34,12 @@ float UScoreComponent::GetCurrentScore() const
 	return CurrentScore;
 }
 
-TArray<FExerciseRecord> UScoreComponent::GetAllRecords() const
+void UScoreComponent::BeginPlay()
 {
-	return ExerciseRecords;
+	Super::BeginPlay();
+
+	GameInstance = Cast<UJointQuestGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	check(GameInstance);
 }
 
 

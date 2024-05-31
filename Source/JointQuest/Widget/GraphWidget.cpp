@@ -20,7 +20,7 @@ int32 UGraphWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Allotte
 		FVector2D PositionB = FVector2D(Stride * i + offset, height + 100.0f * 10.0f);
 
 		FLinearColor LineColor = Records[i].bHasSucceeded ? FLinearColor::Green : FLinearColor::Red;
-
+		
 		FSlateDrawElement::MakeDrawSpaceSpline(
 			OutDrawElements,
 			NewLayerId,

@@ -30,6 +30,7 @@ public:
 	virtual void PlayerTick(float DeltaSeconds) override;
 	EJointTrackingStatus GetCurrentStatus() const;
 	float GetPeakAngle() const;
+	int32 GetFailedCnt() const;
 
 	UScoreComponent* GetScoreComponent() const;
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
@@ -59,8 +60,10 @@ private:
 	float PlayerPeakAngle = 0.0f; // reset every reps
 
 	// player secondary informaiton
-	float PlayerSubAngle1 = 0.0f; // e.g. 허벅지와 종아리 안쪽 각도
-	float PlayerSubAngle2 = 0.0f; // e.g. 골반과 허벅지의 수평방향 각도
+	float PlayerSubAngle1 = 0.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 
+	float PlayerSubAngle2 = 0.0f; // e.g. 골반과 허벅지의 수평방향 각도  // 80 <= x <= 110
+	int32 CntSubAngle1Failed = 0;
+	int32 CntSubAngle2Failed = 0;
 	
 	// thresholds to play animation
 	float LowerBoundRate = 0.2f;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "../Actor/ScoreComponent.h"
+#include "../GameInstance/JointQuestGameInstance.h"
 
 #include "GraphWidget.generated.h"
 /**
