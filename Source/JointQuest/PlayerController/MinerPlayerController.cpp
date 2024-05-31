@@ -8,6 +8,7 @@
 #include "../Widget/GraphWidget.h"
 #include "JointQuest/Actor/ScoreComponent.h"
 #include "JointQuest/TransportManager.h"
+#include "JointQuest/Widget/WarningWidget.h"
 
 AMinerPlayerController::AMinerPlayerController()
 {
@@ -18,20 +19,10 @@ AMinerPlayerController::AMinerPlayerController()
 void AMinerPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	NetWorkHandler = NewObject<UNetworkHandler>(this);
-
-	if(NetWorkHandler->Connect(TEXT("127.0.0.1"), 7777))
-	{
-		UE_LOG(LogTemp, Display, TEXT("connected to the socket"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("failed to connect socket"));
-	}
 	
-	/*UUserWidget* GameplayWidget = CreateWidget(this, GamePlayWidget);
-	if(GameplayWidget != nullptr) GameplayWidget->AddToViewport();*/
+	WarningWidget = CreateWidget<UWarningWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
+	WarningWidget->AddToViewport();
+	WarningWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void AMinerPlayerController::PlayerTick(float DeltaSeconds)
@@ -41,35 +32,6 @@ void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 	// IPC ( with Mediapipe )
 	// reads joint tracking data
 	ProcessKneeTracking();
-	
-	/*
-	// temporary simulation code
-	static float ElapsedTime = 0.0f;
-	ElapsedTime += DeltaSeconds;
-
-	// reads data and sets status
-	/*if(ElapsedTime > 5.0f)
-	{
-		ElapsedTime = 0.0f;
-		CurrentStatus = EJointTrackingStatus::Rising;
-	}
-
-	if (CurrentStatus == EJointTrackingStatus::Rising && ElapsedTime >= 1.0f)
-	{
-		CurrentStatus = EJointTrackingStatus::Holding; 
-		ElapsedTime = 0.0f; 
-	}
-	else if (CurrentStatus == EJointTrackingStatus::Holding && ElapsedTime >= 1.0f)
-	{
-		CurrentStatus = EJointTrackingStatus::Falling; 
-		ElapsedTime = 0.0f; 
-	}
-	else if (CurrentStatus == EJointTrackingStatus::Falling && ElapsedTime >= 1.0f)
-	{
-		CurrentStatus = EJointTrackingStatus::Standing; 
-		ElapsedTime = 0.0f;
-	}
-	*/
 }
 
 EJointTrackingStatus AMinerPlayerController::GetCurrentStatus() const
@@ -114,17 +76,18 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 
 void AMinerPlayerController::ProcessKneeTracking()
 {
-	//NetWorkHandler->ReceiveData();
-	const float CurrentAngle = ATransportManager::GetJointAngle();
-	const float RaisedRate = CurrentAngle / PlayerLimitAngle;
+	PlayerMainAngle = ATransportManager::GetJointAngle();
+	PlayerSubAngle1 = ATransportManager::GetSubAngle1();
+	PlayerSubAngle2 = ATransportManager::GetSubAngle2();
+	
+	const float RaisedRate = PlayerMainAngle / PlayerLimitAngle;
 
 	// PlayerSubAngle1 허벅지와 종아리 안쪽 각도  70 <= x <= 100
 	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
-		if(Widget != nullptr)
+		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
-			Widget->AddToViewport();
+			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		CntSubAngle1Failed++;
 	}
@@ -132,14 +95,13 @@ void AMinerPlayerController::ProcessKneeTracking()
 	// PlayerSubAngle2 골반과 허벅지의 수평방향 각도  80 <= x <= 110
 	if(PlayerSubAngle2 < 80.0f || PlayerSubAngle2 > 110.0f)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
-		if(Widget != nullptr)
+		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
-			Widget->AddToViewport();
+			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		CntSubAngle2Failed++;
 	}
-	
+
 	if (CurrentStatus == EJointTrackingStatus::Standing)
 	{
 		PlayerPeakAngle = 0.0f;
@@ -164,7 +126,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Holding)
 	{
-		PlayerPeakAngle = FMath::Max(PlayerPeakAngle, CurrentAngle);
+		PlayerPeakAngle = FMath::Max(PlayerPeakAngle, PlayerMainAngle);
 		
 		if(RaisedRate < UpperBoundRate)
 		{

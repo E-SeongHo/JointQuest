@@ -17,6 +17,7 @@ enum class EJointTrackingStatus : uint8
 
 class UNetworkHandler;
 class UScoreComponent;
+class UWarningWidget;
 
 UCLASS()
 class JOINTQUEST_API AMinerPlayerController : public APlayerController
@@ -43,27 +44,24 @@ private:
 	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> GamePlayWidget;
-
-	UPROPERTY(EditAnyWhere)
-	TSubclassOf<UUserWidget> RecordChartWidget;
-
+	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> AngleOutOfBoundWarningWidget;
 	
-	UNetworkHandler* NetWorkHandler;
-
 	// joint tracking data
 	EJointTrackingStatus CurrentStatus;
 
 	// player primary information
 	float PlayerLimitAngle = 90.0f;
 	float PlayerPeakAngle = 0.0f; // reset every reps
-
+	float PlayerMainAngle = 0.0f;
+	
 	// player secondary informaiton
 	float PlayerSubAngle1 = 0.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 
 	float PlayerSubAngle2 = 0.0f; // e.g. 골반과 허벅지의 수평방향 각도  // 80 <= x <= 110
 	int32 CntSubAngle1Failed = 0;
 	int32 CntSubAngle2Failed = 0;
+	UWarningWidget* WarningWidget;
 	
 	// thresholds to play animation
 	float LowerBoundRate = 0.2f;
