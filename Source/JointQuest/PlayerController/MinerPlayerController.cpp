@@ -10,6 +10,7 @@
 #include "JointQuest/TransportManager.h"
 #include "JointQuest/Actor/CaptureComponent.h"
 #include "JointQuest/Widget/WarningWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 AMinerPlayerController::AMinerPlayerController()
 {
@@ -77,6 +78,14 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 
 	UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
 	GraphWidget->AddToViewport();
+
+	UJointQuestGameInstance* GameInstance = Cast<UJointQuestGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GameInstance->GameEnd(ScoreComp->GetCurrentScore());
+	
+	for(int i = 0; i < 5; i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Angle : %f, Succeeded : %d "),GameInstance->GetRecordAngleRate(i), GameInstance->HasRecordSucceeded(i));
+	}
 }
 
 void AMinerPlayerController::ProcessKneeTracking()
@@ -94,7 +103,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
 			// incorrect webcam's depth tracking 
-			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("무릎안쪽: %f"), PlayerSubAngle1));
 		CntSubAngle1Failed++;
@@ -110,7 +119,10 @@ void AMinerPlayerController::ProcessKneeTracking()
 		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("골반: %f"), PlayerSubAngle2));
 		CntSubAngle2Failed++;
 	}
-
+	
+	PlayerPeakAngle = FMath::Max(PlayerPeakAngle, PlayerMainAngle);
+	//UE_LOG(LogTemp, Display, TEXT("peak angle : %f"), PlayerPeakAngle);
+	
 	if (CurrentStatus == EJointTrackingStatus::Standing)
 	{
 		PlayerPeakAngle = 0.0f;
@@ -136,7 +148,6 @@ void AMinerPlayerController::ProcessKneeTracking()
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Holding)
 	{
-		PlayerPeakAngle = FMath::Max(PlayerPeakAngle, PlayerMainAngle);
 		
 		if(RaisedRate < UpperBoundRate)
 		{

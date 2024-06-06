@@ -126,6 +126,9 @@ void AMinerCharacter::EndCharging()
 	bIsCharging = false;
 	UE_LOG(LogTemp, Display, TEXT("Charging Ended, Charged : %fs"), ChargedTime);
 
+	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
+	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
+	
 	PlayAnimMontage(KneeDownAnimMontage);	
 }
 
@@ -176,7 +179,7 @@ void AMinerCharacter::TriggerDiggingNiagaraEffect(float Duration)
 void AMinerCharacter::DigGround()
 {
 	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
-	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
+	//PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
 
 	const int32 Point = ChargedTime * 10.0f;
 	const int32 Penalty = (PlayerController->GetFailedCnt() / 10) * 0.01f;

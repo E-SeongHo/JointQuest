@@ -35,8 +35,15 @@ public:
 	float GetRecordAngleRate(const int32 idx) const;
 	UFUNCTION(BlueprintCallable, Category = "Records")
 	bool HasRecordSucceeded(const int32 idx) const;
-
+	UFUNCTION(BlueprintCallable, Category = "Records")
+	float GetGameScore();
+	UFUNCTION(BlueprintCallable, Category = "Records")
+	float GetGameMaxAngle();
+	
+	
 	void SetCurrentRepAsBestRep();
+
+	void GameEnd(const float GameScore);
 	
 private:
 	float PlayerLimitAngle = 90.0f; // reads from file when game started
@@ -44,6 +51,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Records", meta = (AllowPrivateAccess = "true"))
 	TArray<FExerciseRecord> ExerciseRecords;
 	int32 BestRepIndex = 0;
+
+	// hack
+	float Score;
+	float MaxAngle;
 };
 
 
