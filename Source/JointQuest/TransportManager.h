@@ -41,10 +41,15 @@ protected:
 	static float SubAngle2;
 	static FString BodyData;
 
+	// capture
+	static UTexture2D* CurrentWebcamDisplay;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	static UTexture2D* GetCurrentWebcamDisplay();
+	
 	UFUNCTION(BlueprintCallable)
 	static float GetJointAngle();
 

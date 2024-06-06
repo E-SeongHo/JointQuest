@@ -27,6 +27,14 @@ void UScoreComponent::RecordCurrentRep(bool bHasSucceeded)
 void UScoreComponent::AwardPoints(int32 Points)
 {
 	CurrentScore += Points;
+
+	if(Points > MaxRepScore)
+	{
+		MaxRepScore = Points;
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("BestPoints: %d"), Points));
+		GameInstance->SetCurrentRepAsBestRep();
+	}
 }
 
 float UScoreComponent::GetCurrentScore() const

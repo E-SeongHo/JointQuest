@@ -9,6 +9,7 @@ float ATransportManager::SubAngle1 = 0.0f;
 float ATransportManager::SubAngle2 = 0.0f;
 
 FString ATransportManager::BodyData = TEXT("null");
+UTexture2D* ATransportManager::CurrentWebcamDisplay = nullptr;
 
 // Sets default values
 ATransportManager::ATransportManager()
@@ -21,7 +22,7 @@ ATransportManager::ATransportManager()
 void ATransportManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -29,6 +30,11 @@ void ATransportManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
+{
+	return CurrentWebcamDisplay;
 }
 
 
@@ -60,7 +66,7 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 	/*
 	FString left, right;
 	text.Split(TEXT(","), &left, &right);
-	
+
 	if (right == "") {
 
 		UE_LOG(LogTemp, Warning, TEXT("Decoding failure"));
@@ -80,7 +86,7 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 
 UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
-	
+
 	res->MipGenSettings = TMGS_NoMipmaps;
 	res->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap;
 	res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
@@ -88,6 +94,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	res->Filter = TextureFilter::TF_Nearest;
 	res->UpdateResource();
 
+	CurrentWebcamDisplay = res;
 	return res;
 }
 
@@ -97,7 +104,7 @@ float ATransportManager::GetJointAngle() {
 
 void ATransportManager::SetJointAngle(float value){
 	if (value < 0.1) { return; }
-	
+
 	JointAngle = value;
 }
 float ATransportManager::GetSubAngle1() {

@@ -25,11 +25,12 @@ protected:
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int32 GoalReps = 20;
+	int32 GoalReps = 5;
 
 	UPROPERTY()
 	UJointQuestGameInstance* GameInstance;
 	
 	float CurrentScore = 0.0f;
+	float MaxRepScore = 0.0f;
 };
 
