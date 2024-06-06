@@ -60,8 +60,8 @@ private:
 	float PlayerMainAngle = 0.0f;
 	
 	// player secondary information
-	float PlayerSubAngle1 = 0.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 
-	float PlayerSubAngle2 = 0.0f; // e.g. 골반과 허벅지의 수평방향 각도  // 80 <= x <= 110
+	float PlayerSubAngle1 = 85.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 
+	float PlayerSubAngle2 = 100.0f; // e.g. 골반과 허벅지의 수평방향 각도  // 80 <= x <= 110
 	int32 CntSubAngle1Failed = 0;
 	int32 CntSubAngle2Failed = 0;
 	UWarningWidget* WarningWidget;

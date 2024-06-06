@@ -47,7 +47,7 @@ bool UCaptureComponent::SaveTextureToBinary(UTexture2D* Texture, const FString& 
 	FArrayWriter Writer;
 	Writer << TextureData;
 
-	return FFileHelper::SaveArrayToFile(Writer, *(FilePath / TEXT(".bin")));
+	return FFileHelper::SaveArrayToFile(Writer, *FilePath);
 }
 
 bool UCaptureComponent::SaveTextureToPNG(UTexture2D* Texture, const FString& FilePath)
@@ -71,7 +71,7 @@ bool UCaptureComponent::SaveTextureToPNG(UTexture2D* Texture, const FString& Fil
 	{
 		const TArray64<uint8>& PNGData = ImageWrapper->GetCompressed(100);
 		
-		return FFileHelper::SaveArrayToFile(PNGData, *(FilePath / TEXT(".png")));
+		return FFileHelper::SaveArrayToFile(PNGData, *FilePath);
 	}
 
 	return false;
@@ -109,7 +109,7 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		if (TimeElapsedFromLastCapture >= TargetFrameInterval)
 		{
 			TimeElapsedFromLastCapture = 0.0f;
-			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d"), FrameIndex++);
+			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.bin"), FrameIndex++);
 			SaveTextureToBinary(ATransportManager::GetCurrentWebcamDisplay(), FilePath);
 		}
 	}

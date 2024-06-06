@@ -91,7 +91,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
 			// incorrect webcam's depth tracking 
-			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("무릎안쪽: %f"), PlayerSubAngle1));
 		CntSubAngle1Failed++;
@@ -117,7 +117,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate > LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Rising;
-			CaptureComp->BeginCapture();
+			//CaptureComp->BeginCapture();
 		}
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Rising)
@@ -145,7 +145,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate <= LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Standing;
-			CaptureComp->EndCapture();			
+			//CaptureComp->EndCapture();			
 		}
 	}
 }
