@@ -7,7 +7,8 @@
 float ATransportManager::JointAngle = 0.0f;
 float ATransportManager::SubAngle1 = 0.0f;
 float ATransportManager::SubAngle2 = 0.0f;
-//FString ATransportManager::UserData = TEXT("");
+
+FString ATransportManager::BodyData = TEXT("null");
 
 // Sets default values
 ATransportManager::ATransportManager()
@@ -139,4 +140,12 @@ bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
 	bool isSavedImage = FFileHelper::SaveArrayToFile(compressedBitmap, *path);
 
 	return isSavedImage;
+}
+
+void ATransportManager::SetBodyData(FString data) {
+	BodyData = data;
+}
+
+FString ATransportManager::GetBodyData(){
+	return BodyData;
 }

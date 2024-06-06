@@ -39,6 +39,7 @@ protected:
 	static float JointAngle;
 	static float SubAngle1;
 	static float SubAngle2;
+	static FString BodyData;
 
 public:	
 	// Called every frame
@@ -64,4 +65,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static bool SaveImage(UTexture2D* texture, const FString& path);
+
+
+	UFUNCTION(BlueprintCallable)
+	static void SetBodyData(FString data);
+
+	UFUNCTION(BlueprintCallable)
+	static FString GetBodyData();
 };
