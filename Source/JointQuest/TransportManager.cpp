@@ -7,6 +7,8 @@
 float ATransportManager::JointAngle = 0.0f;
 float ATransportManager::SubAngle1 = 0.0f;
 float ATransportManager::SubAngle2 = 0.0f;
+UTexture2D* ATransportManager::CurrentWebcamDisplay = nullptr;
+
 //FString ATransportManager::UserData = TEXT("");
 
 // Sets default values
@@ -28,6 +30,11 @@ void ATransportManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
+{
+	return CurrentWebcamDisplay;
 }
 
 
@@ -87,6 +94,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	res->Filter = TextureFilter::TF_Nearest;
 	res->UpdateResource();
 
+	CurrentWebcamDisplay = res;
 	return res;
 }
 

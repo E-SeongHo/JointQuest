@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "MinerPlayerController.generated.h"
 
+class UCaptureComponent;
+
 UENUM(BlueprintType)
 enum class EJointTrackingStatus : uint8
 {
@@ -41,6 +43,7 @@ private:
 	
 private:
 	UScoreComponent* ScoreComp;
+	UCaptureComponent* CaptureComp;
 	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> GamePlayWidget;
@@ -56,7 +59,7 @@ private:
 	float PlayerPeakAngle = 0.0f; // reset every reps
 	float PlayerMainAngle = 0.0f;
 	
-	// player secondary informaiton
+	// player secondary information
 	float PlayerSubAngle1 = 0.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 
 	float PlayerSubAngle2 = 0.0f; // e.g. 골반과 허벅지의 수평방향 각도  // 80 <= x <= 110
 	int32 CntSubAngle1Failed = 0;

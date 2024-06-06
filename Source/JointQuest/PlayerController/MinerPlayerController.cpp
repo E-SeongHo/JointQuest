@@ -8,12 +8,14 @@
 #include "../Widget/GraphWidget.h"
 #include "JointQuest/Actor/ScoreComponent.h"
 #include "JointQuest/TransportManager.h"
+#include "JointQuest/Actor/CaptureComponent.h"
 #include "JointQuest/Widget/WarningWidget.h"
 
 AMinerPlayerController::AMinerPlayerController()
 {
 	CurrentStatus = EJointTrackingStatus::Standing;
 	ScoreComp = CreateDefaultSubobject<UScoreComponent>(TEXT("ScoreComponent"));
+	CaptureComp = CreateDefaultSubobject<UCaptureComponent>(TEXT("CaptureComponent"));
 }
 
 void AMinerPlayerController::BeginPlay()
@@ -81,14 +83,17 @@ void AMinerPlayerController::ProcessKneeTracking()
 	PlayerSubAngle2 = ATransportManager::GetSubAngle2();
 	
 	const float RaisedRate = PlayerMainAngle / PlayerLimitAngle;
-
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("rate: %f"), RaisedRate));
+	
 	// PlayerSubAngle1 허벅지와 종아리 안쪽 각도  70 <= x <= 100
 	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
 		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
-			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			// incorrect webcam's depth tracking 
+			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("무릎안쪽: %f"), PlayerSubAngle1));
 		CntSubAngle1Failed++;
 	}
 	
@@ -99,6 +104,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		{
 			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("골반: %f"), PlayerSubAngle2));
 		CntSubAngle2Failed++;
 	}
 
@@ -110,7 +116,8 @@ void AMinerPlayerController::ProcessKneeTracking()
 		
 		if(RaisedRate > LowerBoundRate)
 		{
-			CurrentStatus = EJointTrackingStatus::Rising; 
+			CurrentStatus = EJointTrackingStatus::Rising;
+			CaptureComp->BeginCapture();
 		}
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Rising)
@@ -138,6 +145,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate <= LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Standing;
+			CaptureComp->EndCapture();			
 		}
 	}
 }
