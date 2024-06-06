@@ -201,7 +201,7 @@ void AMinerCharacter::DigGround()
 	
 	ChargedTime = 0.0f;
 
-	TriggerDiggingNiagaraEffect(MoveDuration - 0.7f);
+	TriggerDiggingNiagaraEffect(MoveDuration - 0.65f);
 }
 
 float AMinerCharacter::GetHoldingProgressPercent() const

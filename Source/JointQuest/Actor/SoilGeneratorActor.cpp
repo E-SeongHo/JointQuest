@@ -30,8 +30,8 @@ void ASoilGeneratorActor::BeginPlay()
 	RefLocation = Stage->GetActorLocation();
 	
 	// hack : for test
-	LeftGenPos = {RefLocation.X-6.0f, RefLocation.Y + HalfWidth + 60.0f};
-	RightGenPos = {RefLocation.X-6.0f ,RefLocation.Y - HalfWidth - 60.0f};
+	LeftGenPos = {RefLocation.X-5.9f, RefLocation.Y + HalfWidth + 60.0f};
+	RightGenPos = {RefLocation.X-5.9f ,RefLocation.Y - HalfWidth - 60.0f};
 	BackGenPos = {RefLocation.X - HalfDepth * 2 - 75.0f,0.0f};
 	
 	GenerateSoils();
