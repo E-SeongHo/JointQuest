@@ -177,8 +177,10 @@ void AMinerCharacter::DigGround()
 {
 	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
 	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
-	
-	PlayerController->GetScoreComponent()->AwardPoints(ChargedTime * 10.0f * 0.01f * PlayerController->GetFailedCnt() / 10);
+
+	const int32 Point = ChargedTime * 10.0f;
+	const int32 Penalty = (PlayerController->GetFailedCnt() / 10) * 0.01f;
+	PlayerController->GetScoreComponent()->AwardPoints(Point - Penalty);
 	UE_LOG(LogTemp, Display, TEXT("Current Points : %d, FailedCnt Was : %d"), GameMode->GetScore(), PlayerController->GetFailedCnt());
 
 	if(!bHasSucceeded)

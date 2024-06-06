@@ -99,7 +99,7 @@ void ASoilGeneratorActor::GenerateSoils()
 
 void ASoilGeneratorActor::RearrangeSoils()
 {
-	UE_LOG(LogTemp, Display, TEXT("Rearragne Soils"));
+	UE_LOG(LogTemp, Display, TEXT("Rearrange Soils"));
 
 	int FixNums = 4;
 	float CurrentHeight = TailPtr->GetActorLocation().Z;

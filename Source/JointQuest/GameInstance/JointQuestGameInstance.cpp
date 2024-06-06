@@ -26,3 +26,8 @@ bool UJointQuestGameInstance::HasRecordSucceeded(const int32 idx) const
 
 	return ExerciseRecords[idx].bHasSucceeded;
 }
+
+void UJointQuestGameInstance::SetCurrentRepAsBestRep()
+{
+	BestRepIndex = ExerciseRecords.Num()-1;
+}
