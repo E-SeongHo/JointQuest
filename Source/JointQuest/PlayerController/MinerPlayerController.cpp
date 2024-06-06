@@ -74,6 +74,9 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 		RecordWidget->Stride = static_cast<float>(x) / Records.Num();
 		RecordWidget->AddToViewport(999);
 	}*/
+
+	UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
+	GraphWidget->AddToViewport();
 }
 
 void AMinerPlayerController::ProcessKneeTracking()

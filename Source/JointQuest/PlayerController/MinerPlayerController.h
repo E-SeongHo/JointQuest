@@ -46,7 +46,7 @@ private:
 	UCaptureComponent* CaptureComp;
 	
 	UPROPERTY(EditAnyWhere)
-	TSubclassOf<UUserWidget> GamePlayWidget;
+	TSubclassOf<UUserWidget> GraphWidgetClass;
 	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> AngleOutOfBoundWarningWidget;
