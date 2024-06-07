@@ -87,4 +87,4 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 # Ingame ignores
-UserData/*
+UserData\*

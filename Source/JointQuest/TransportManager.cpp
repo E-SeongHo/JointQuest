@@ -89,7 +89,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 
 	res->MipGenSettings = TMGS_NoMipmaps;
 	res->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap;
-	res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
+	//res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
 	res->SRGB = false;
 	res->Filter = TextureFilter::TF_Nearest;
 	res->UpdateResource();
