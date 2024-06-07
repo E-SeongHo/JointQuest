@@ -35,7 +35,11 @@ public:
 	float GetPeakAngle() const;
 	int32 GetFailedCnt() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Score")
 	UScoreComponent* GetScoreComponent() const;
+	UFUNCTION(BlueprintCallable, Category = "Capture")
+	UCaptureComponent* GetCaptureComponent() const;
+	
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
 	
 private:

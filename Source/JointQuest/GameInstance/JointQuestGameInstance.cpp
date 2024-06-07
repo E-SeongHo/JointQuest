@@ -39,6 +39,11 @@ float UJointQuestGameInstance::GetGameMaxAngle()
 	return MaxAngle;
 }
 
+int32 UJointQuestGameInstance::GetBestRepIndex()
+{
+	return BestRepIndex;
+}
+
 void UJointQuestGameInstance::SetCurrentRepAsBestRep()
 {
 	BestRepIndex = ExerciseRecords.Num()-1;

@@ -57,24 +57,14 @@ UScoreComponent* AMinerPlayerController::GetScoreComponent() const
 	return ScoreComp;
 }
 
+UCaptureComponent* AMinerPlayerController::GetCaptureComponent() const
+{
+	return CaptureComp;
+}
+
 void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 {
 	Super::GameHasEnded(EndGameFocus, bIsWinner);
-
-	// Load new Level
-	// And new level reads records from JointQuestGameInstance
-	/*UGraphWidget* RecordWidget = Cast<UGraphWidget>(CreateWidget(this, RecordChartWidget));
-	if(RecordWidget != nullptr)
-	{
-		TArray<FExerciseRecord> Records = ScoreComp->GetAllRecords();
-		RecordWidget->Records = Records;
-
-		int32 x, y;
-		GetViewportSize(x, y);
-		RecordWidget->ViewPortSize = FVector2d(x, y);
-		RecordWidget->Stride = static_cast<float>(x) / Records.Num();
-		RecordWidget->AddToViewport(999);
-	}*/
 
 	UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
 	GraphWidget->AddToViewport();
@@ -86,6 +76,8 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Angle : %f, Succeeded : %d "),GameInstance->GetRecordAngleRate(i), GameInstance->HasRecordSucceeded(i));
 	}
+
+	CaptureComp->GameEnd();
 }
 
 void AMinerPlayerController::ProcessKneeTracking()
@@ -132,7 +124,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate > LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Rising;
-			//CaptureComp->BeginCapture();
+			CaptureComp->BeginCapture();
 		}
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Rising)
@@ -159,7 +151,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate <= LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Standing;
-			//CaptureComp->EndCapture();			
+			CaptureComp->EndCapture();			
 		}
 	}
 }
