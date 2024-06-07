@@ -4,9 +4,9 @@
 #include "TransportManager.h"
 
 
-float ATransportManager::JointAngle = 0.0f;
-float ATransportManager::SubAngle1 = 0.0f;
-float ATransportManager::SubAngle2 = 0.0f;
+float ATransportManager::JointAngle = -1.0f;
+float ATransportManager::SubAngle1 = -1.0f;
+float ATransportManager::SubAngle2 = -1.0f;
 
 FString ATransportManager::BodyData = TEXT("null");
 UTexture2D* ATransportManager::CurrentWebcamDisplay = nullptr;

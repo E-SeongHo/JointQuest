@@ -43,6 +43,7 @@ private:
 	FString CaptureDirectory;
 
 	// End Game
+	UPROPERTY()
 	TArray<UTexture2D*> POTGData;  
 	
 	UPROPERTY()

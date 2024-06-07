@@ -152,11 +152,14 @@ void UCaptureComponent::GameEnd()
 	FString Directory = FPaths::ProjectContentDir() / TEXT("Capture") / FString::Printf(TEXT("Rep%d"), POTGIndex);
 	int32 Frame = 0;
 	FString Path = Directory / FString::Printf(TEXT("_%d.png"), Frame++);
+
 	while(PlatformFile.FileExists(*Path))
 	{
 		POTGData.Add(LoadPNGToTexture(Path));
 		Path = Directory / FString::Printf(TEXT("_%d.png"), Frame++);
 	}
+
+	UE_LOG(LogTemp, Display, TEXT("Rep%d : %d"), POTGIndex, POTGData.Num());
 }
 
 UTexture2D* UCaptureComponent::StreamPOTG()

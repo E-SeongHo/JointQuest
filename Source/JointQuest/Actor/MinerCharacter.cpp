@@ -107,6 +107,7 @@ void AMinerCharacter::BeginCharging()
 
 	PlayAnimMontage(KneeUpAnimMontage);
 	bIsCharging = true;
+	UGameplayStatics::PlaySound2D(this, JumpingSound);
 
 	GetWorld()->GetTimerManager().SetTimer(ChargingTimerHandle, FTimerDelegate::CreateLambda([&]
 	{
@@ -203,7 +204,7 @@ void AMinerCharacter::DigGround()
 		AMovableActor* MovingActor = Cast<AMovableActor>(MovableActor);
 		MovingActor->LiftUp(500.0f * 4.0f, 50.0f, MoveDuration);
 	}
-	
+	UGameplayStatics::PlaySound2D(this, DiggingSound);
 	ChargedTime = 0.0f;
 
 	TriggerDiggingNiagaraEffect(MoveDuration - 0.65f);
