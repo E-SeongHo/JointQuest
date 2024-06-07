@@ -152,7 +152,7 @@ class ClientSocket:
                 self.start_thread(self.knee_game)
         elif command == "reconnect":
             self.stop_threads()
-            time.sleep(1)
+            time.sleep(3)
             self.reconnect()
             
         
