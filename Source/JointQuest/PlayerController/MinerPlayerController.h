@@ -35,7 +35,11 @@ public:
 	float GetPeakAngle() const;
 	int32 GetFailedCnt() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Score")
 	UScoreComponent* GetScoreComponent() const;
+	UFUNCTION(BlueprintCallable, Category = "Capture")
+	UCaptureComponent* GetCaptureComponent() const;
+	
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
 	
 private:
@@ -50,14 +54,17 @@ private:
 	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> AngleOutOfBoundWarningWidget;
+
+	bool bHasGameEnded = false;
+	bool bHasGameStarted = false;
 	
 	// joint tracking data
 	EJointTrackingStatus CurrentStatus;
 
 	// player primary information
 	float PlayerLimitAngle = 90.0f;
-	float PlayerPeakAngle = 0.0f; // reset every reps
-	float PlayerMainAngle = 0.0f;
+	float PlayerPeakAngle; // reset every reps
+	float PlayerMainAngle;
 	
 	// player secondary information
 	float PlayerSubAngle1 = 85.0f; // e.g. 허벅지와 종아리 안쪽 각도  70 <= x <= 100 

@@ -39,8 +39,8 @@ public:
 	float GetGameScore();
 	UFUNCTION(BlueprintCallable, Category = "Records")
 	float GetGameMaxAngle();
-	
-	
+
+	int32 GetBestRepIndex();
 	void SetCurrentRepAsBestRep();
 
 	void GameEnd(const float GameScore);

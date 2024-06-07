@@ -30,6 +30,8 @@ void AMinerPlayerController::BeginPlay()
 
 void AMinerPlayerController::PlayerTick(float DeltaSeconds)
 {
+	if(bHasGameEnded) return;
+	
 	Super::PlayerTick(DeltaSeconds);
 
 	// IPC ( with Mediapipe )
@@ -57,28 +59,15 @@ UScoreComponent* AMinerPlayerController::GetScoreComponent() const
 	return ScoreComp;
 }
 
+UCaptureComponent* AMinerPlayerController::GetCaptureComponent() const
+{
+	return CaptureComp;
+}
+
 void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 {
-	Super::GameHasEnded(EndGameFocus, bIsWinner);
-
-	// Load new Level
-	// And new level reads records from JointQuestGameInstance
-	/*UGraphWidget* RecordWidget = Cast<UGraphWidget>(CreateWidget(this, RecordChartWidget));
-	if(RecordWidget != nullptr)
-	{
-		TArray<FExerciseRecord> Records = ScoreComp->GetAllRecords();
-		RecordWidget->Records = Records;
-
-		int32 x, y;
-		GetViewportSize(x, y);
-		RecordWidget->ViewPortSize = FVector2d(x, y);
-		RecordWidget->Stride = static_cast<float>(x) / Records.Num();
-		RecordWidget->AddToViewport(999);
-	}*/
-
-	UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
-	GraphWidget->AddToViewport();
-
+	//Super::GameHasEnded(EndGameFocus, bIsWinner);
+	
 	UJointQuestGameInstance* GameInstance = Cast<UJointQuestGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	GameInstance->GameEnd(ScoreComp->GetCurrentScore());
 	
@@ -86,6 +75,17 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Angle : %f, Succeeded : %d "),GameInstance->GetRecordAngleRate(i), GameInstance->HasRecordSucceeded(i));
 	}
+
+	CaptureComp->GameEnd();
+	bHasGameEnded = true;
+
+	// Make sure waits until the last rep is recorded properly
+	FTimerHandle EndGameTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(EndGameTimerHandle, [this]()
+	{
+		UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
+		GraphWidget->AddToViewport();
+	}, 3.0f, false);
 }
 
 void AMinerPlayerController::ProcessKneeTracking()
@@ -93,11 +93,17 @@ void AMinerPlayerController::ProcessKneeTracking()
 	PlayerMainAngle = ATransportManager::GetJointAngle();
 	PlayerSubAngle1 = ATransportManager::GetSubAngle1();
 	PlayerSubAngle2 = ATransportManager::GetSubAngle2();
+
+	// hack
+	if(PlayerMainAngle > 0.0f)
+	{
+		bHasGameStarted = true;	
+	}
+	if(!bHasGameStarted) return;
 	
 	const float RaisedRate = PlayerMainAngle / PlayerLimitAngle;
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("rate: %f"), RaisedRate));
 	
-	// PlayerSubAngle1 허벅지와 종아리 안쪽 각도  70 <= x <= 100
+	// PlayerSubAngle1 : Inner angle between thigh and calf 70 <= x <= 100
 	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
 		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
@@ -105,23 +111,20 @@ void AMinerPlayerController::ProcessKneeTracking()
 			// incorrect webcam's depth tracking 
 			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("무릎안쪽: %f"), PlayerSubAngle1));
 		CntSubAngle1Failed++;
 	}
 	
-	// PlayerSubAngle2 골반과 허벅지의 수평방향 각도  80 <= x <= 110
+	// PlayerSubAngle2 Horizontal angle between pelvis and thigh 80 <= x <= 110
 	if(PlayerSubAngle2 < 80.0f || PlayerSubAngle2 > 110.0f)
 	{
 		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
 		{
 			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("골반: %f"), PlayerSubAngle2));
 		CntSubAngle2Failed++;
 	}
 	
 	PlayerPeakAngle = FMath::Max(PlayerPeakAngle, PlayerMainAngle);
-	//UE_LOG(LogTemp, Display, TEXT("peak angle : %f"), PlayerPeakAngle);
 	
 	if (CurrentStatus == EJointTrackingStatus::Standing)
 	{
@@ -132,7 +135,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate > LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Rising;
-			//CaptureComp->BeginCapture();
+			CaptureComp->BeginCapture();
 		}
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Rising)
@@ -159,7 +162,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 		if(RaisedRate <= LowerBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Standing;
-			//CaptureComp->EndCapture();			
+			CaptureComp->EndCapture();			
 		}
 	}
 }

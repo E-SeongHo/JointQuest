@@ -3,6 +3,9 @@
 Content/ThirdParties/
 Content/*/ThirdParties/
 
+# Capture Images
+Content/Capture/*
+
 # Rider
 .idea/
 .vsconfig

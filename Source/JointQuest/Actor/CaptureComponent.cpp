@@ -77,6 +77,52 @@ bool UCaptureComponent::SaveTextureToPNG(UTexture2D* Texture, const FString& Fil
 	return false;
 }
 
+UTexture2D* UCaptureComponent::LoadPNGToTexture(const FString& FilePath)
+{
+	TArray<uint8> FileData;
+	if (!FFileHelper::LoadFileToArray(FileData, *FilePath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to load file: %s"), *FilePath);
+		return nullptr;
+	}
+
+	IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
+	TSharedPtr<IImageWrapper> ImageWrapper = ImageWrapperModule.CreateImageWrapper(EImageFormat::PNG);
+	if (!ImageWrapper.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create image wrapper for file: %s"), *FilePath);
+		return nullptr;
+	}
+
+	if (!ImageWrapper->SetCompressed(FileData.GetData(), FileData.Num()))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to decompress image: %s"), *FilePath);
+		return nullptr;
+	}
+
+	TArray<uint8> RawData;
+	if (!ImageWrapper->GetRaw(ERGBFormat::BGRA, 8, RawData))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to get raw image data: %s"), *FilePath);
+		return nullptr;
+	}
+
+	UTexture2D* Texture = UTexture2D::CreateTransient(ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), PF_B8G8R8A8);
+	if (!Texture)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create texture: %s"), *FilePath);
+		return nullptr;
+	}
+
+	void* TextureData = Texture->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+	FMemory::Memcpy(TextureData, RawData.GetData(), RawData.Num());
+	Texture->PlatformData->Mips[0].BulkData.Unlock();
+
+	Texture->UpdateResource();
+
+	return Texture;
+}
+
 void UCaptureComponent::BeginCapture()
 {
 	//check(!bIsCapturing);
@@ -97,6 +143,35 @@ void UCaptureComponent::EndCapture()
 	bIsCapturing = false;
 }
 
+void UCaptureComponent::GameEnd()
+{
+	// Loads POTG Data
+	const int32 POTGIndex = GameInstance->GetBestRepIndex();
+
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	FString Directory = FPaths::ProjectContentDir() / TEXT("Capture") / FString::Printf(TEXT("Rep%d"), POTGIndex);
+	int32 Frame = 0;
+	FString Path = Directory / FString::Printf(TEXT("_%d.png"), Frame++);
+
+	while(PlatformFile.FileExists(*Path))
+	{
+		POTGData.Add(LoadPNGToTexture(Path));
+		Path = Directory / FString::Printf(TEXT("_%d.png"), Frame++);
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("Rep%d : %d"), POTGIndex, POTGData.Num());
+}
+
+UTexture2D* UCaptureComponent::StreamPOTG()
+{
+	static int32 CurrentFrameIdx = 0;
+
+	UTexture2D* TextureToStream = POTGData[CurrentFrameIdx];
+	CurrentFrameIdx = (CurrentFrameIdx + 1) % POTGData.Num();
+
+	return TextureToStream;
+}
+
 void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -109,8 +184,8 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		if (TimeElapsedFromLastCapture >= TargetFrameInterval)
 		{
 			TimeElapsedFromLastCapture = 0.0f;
-			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.bin"), FrameIndex++);
-			SaveTextureToBinary(ATransportManager::GetCurrentWebcamDisplay(), FilePath);
+			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.png"), FrameIndex++);
+			SaveTextureToPNG(ATransportManager::GetCurrentWebcamDisplay(), FilePath);
 		}
 	}
 }
