@@ -34,6 +34,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(EEndPlayReason::Type e) override;
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
 	static float JointAngle;
@@ -67,6 +68,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void SetSubAngle2(float value);
+
+	UFUNCTION(BlueprintCallable)
+	static void ResetAngles();
 
 	UFUNCTION(BlueprintCallable)
 	static bool SaveImage(UTexture2D* texture, const FString& path);
