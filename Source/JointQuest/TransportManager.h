@@ -34,7 +34,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void EndPlay(EEndPlayReason::Type e) override;
+	//virtual void EndPlay(EEndPlayReason::Type e) override;
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
 	static float JointAngle;
