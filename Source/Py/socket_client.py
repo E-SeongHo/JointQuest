@@ -73,7 +73,7 @@ class ClientSocket:
                 # 서버로부터 커맨드 입력 대기
                 self.receive_commands()
                 self.cleanup()
-                time.sleep(5)
+                time.sleep(3)
             except Exception as e:
                 print(e)
                 self.connection_attempts += 1
