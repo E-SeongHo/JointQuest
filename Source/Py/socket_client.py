@@ -36,7 +36,7 @@ Json
 """
 
 # 상수
-WEBCAM_INDEX = 1
+WEBCAM_INDEX = 0
 MAX_CONNECTION_ATTEMPTS = 5
 CONNECTION_TEST_SLEEP = 1  # in seconds
 # POSE_PATH = "output/20240415_031753.json"
@@ -73,7 +73,7 @@ class ClientSocket:
                 # 서버로부터 커맨드 입력 대기
                 self.receive_commands()
                 self.cleanup()
-                time.sleep(3)
+                time.sleep(5)
             except Exception as e:
                 print(e)
                 self.connection_attempts += 1
