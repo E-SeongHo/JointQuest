@@ -9,7 +9,7 @@ float ATransportManager::SubAngle1 = -1.0f;
 float ATransportManager::SubAngle2 = -1.0f;
 
 FString ATransportManager::BodyData = TEXT("null");
-UTexture2D* ATransportManager::CurrentWebcamDisplay = nullptr;
+TStrongObjectPtr<UTexture2D> ATransportManager::CurrentWebcamDisplay = nullptr;
 
 // Sets default values
 ATransportManager::ATransportManager()
@@ -40,11 +40,11 @@ void ATransportManager::Tick(float DeltaTime)
 
 UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
 {
-	return CurrentWebcamDisplay;
+	return CurrentWebcamDisplay.Get();
 }
 
 void ATransportManager::SetCurrentWebcamDisplay(UTexture2D* image) {
-	CurrentWebcamDisplay = image;
+	CurrentWebcamDisplay.Reset(image);
 }
 
 FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
@@ -96,9 +96,9 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
 
-	//res->MipGenSettings = TMGS_NoMipmaps;
+	res->MipGenSettings = TMGS_NoMipmaps;
 	res->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap;
-	//res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
+	res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
 	res->SRGB = false;
 	res->Filter = TextureFilter::TF_Nearest;
 	res->UpdateResource();

@@ -43,7 +43,7 @@ protected:
 	static FString BodyData;
 
 	// capture
-	static UTexture2D* CurrentWebcamDisplay;
+	static TStrongObjectPtr<UTexture2D> CurrentWebcamDisplay;
 
 public:	
 	// Called every frame
