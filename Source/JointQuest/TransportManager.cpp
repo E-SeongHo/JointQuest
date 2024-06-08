@@ -101,7 +101,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
 	res->SRGB = false;
 	res->Filter = TextureFilter::TF_Nearest;
-	res->UpdateResource();
+	//res->UpdateResource();
 
 	//CurrentWebcamDisplay = res;
 	return res;
