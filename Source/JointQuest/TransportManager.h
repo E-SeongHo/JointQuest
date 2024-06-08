@@ -50,6 +50,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	static UTexture2D* GetCurrentWebcamDisplay();
+
+	UFUNCTION(BlueprintCallable)
+	static void SetCurrentWebcamDisplay(UTexture2D* image);
 	
 	UFUNCTION(BlueprintCallable)
 	static float GetJointAngle();

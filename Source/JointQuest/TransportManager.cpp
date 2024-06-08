@@ -43,6 +43,9 @@ UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
 	return CurrentWebcamDisplay;
 }
 
+void ATransportManager::SetCurrentWebcamDisplay(UTexture2D* image) {
+	CurrentWebcamDisplay = image;
+}
 
 FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
 	/*
@@ -100,7 +103,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	res->Filter = TextureFilter::TF_Nearest;
 	res->UpdateResource();
 
-	CurrentWebcamDisplay = res;
+	//CurrentWebcamDisplay = res;
 	return res;
 }
 
