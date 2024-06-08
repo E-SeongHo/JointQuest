@@ -139,7 +139,7 @@ bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
 		}
 	}
 
-	texture->PlatformData->Mips[0].BulkData.Unlock();
+	texture->GetPlatformData()->Mips[0].BulkData.Unlock();
 
 	TArray<uint8> compressedBitmap;
 	FImageUtils::CompressImageArray(texture->GetSizeX(), texture->GetSizeY(), colors, compressedBitmap);
