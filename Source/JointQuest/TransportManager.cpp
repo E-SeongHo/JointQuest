@@ -24,11 +24,12 @@ void ATransportManager::BeginPlay()
 	Super::BeginPlay();
 
 }
-
+/*
 void ATransportManager::EndPlay(EEndPlayReason::Type e) {
 	Super::EndPlay(e);
 	ResetAngles();
 }
+*/
 
 // Called every frame
 void ATransportManager::Tick(float DeltaTime)
