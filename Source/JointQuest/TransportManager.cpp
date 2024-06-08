@@ -87,7 +87,7 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
 
-	res->MipGenSettings = TMGS_NoMipmaps;
+	//res->MipGenSettings = TMGS_NoMipmaps;
 	res->CompressionSettings = TextureCompressionSettings::TC_VectorDisplacementmap;
 	//res->MipGenSettings = TextureMipGenSettings::TMGS_NoMipmaps;
 	res->SRGB = false;
@@ -128,7 +128,7 @@ bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
 {
 	TArray<FColor> colors;
 
-	const FColor* FormatedImageData = static_cast<const FColor*>(texture->PlatformData->Mips[0].BulkData.LockReadOnly());
+	const FColor* FormatedImageData = static_cast<const FColor*>(texture->GetPlatformData()->Mips[0].BulkData.LockReadOnly());
 
 	for (int32 Y = 0; Y < texture->GetSizeY(); Y++)
 	{
