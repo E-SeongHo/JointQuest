@@ -25,6 +25,11 @@ void ATransportManager::BeginPlay()
 
 }
 
+void ATransportManager::EndPlay(EEndPlayReason::Type e) {
+	Super::EndPlay(e);
+	ResetAngles();
+}
+
 // Called every frame
 void ATransportManager::Tick(float DeltaTime)
 {
@@ -122,6 +127,12 @@ float ATransportManager::GetSubAngle2() {
 void ATransportManager::SetSubAngle2(float value) {
 	if (value < 0.1) { return; }
 	SubAngle2 = value;
+}
+
+void ATransportManager::ResetAngles() {
+	JointAngle = -1.0f;
+	SubAngle1 = -1.0f;
+	SubAngle2 = -1.0f;
 }
 
 bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
