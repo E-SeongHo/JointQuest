@@ -117,7 +117,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 	// PlayerSubAngle2 Horizontal angle between pelvis and thigh 80 <= x <= 110
 	if(PlayerSubAngle2 < 80.0f || PlayerSubAngle2 > 110.0f)
 	{
-		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
+		if(WarningWidget->GetVisibility() == ESlateVisibility::Hidden)
 		{
 			WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
