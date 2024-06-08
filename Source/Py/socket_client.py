@@ -36,7 +36,7 @@ Json
 """
 
 # 상수
-WEBCAM_INDEX = 0
+WEBCAM_INDEX = 1
 MAX_CONNECTION_ATTEMPTS = 5
 CONNECTION_TEST_SLEEP = 1  # in seconds
 # POSE_PATH = "output/20240415_031753.json"
@@ -132,6 +132,7 @@ class ClientSocket:
                     break
                 json_data = json.loads(data)
                 command = json_data["command"]
+                print("receive command:" ,command)
                 self.handle_command(command, json_data)
         except Exception as e:
             self.send_error(f"Error in receiving command: {e}")
