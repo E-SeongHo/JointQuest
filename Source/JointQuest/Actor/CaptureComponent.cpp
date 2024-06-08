@@ -35,7 +35,7 @@ bool UCaptureComponent::SaveTextureToBinary(UTexture2D* Texture, const FString& 
 {
 	if (!Texture) return false;
 
-	FTexture2DMipMap& Mip = Texture->PlatformData->Mips[0];
+	FTexture2DMipMap& Mip = Texture->GetPlatformData()->Mips[0];
 	void* Data = Mip.BulkData.Lock(LOCK_READ_ONLY);
 
 	TArray<uint8> TextureData;
@@ -54,7 +54,7 @@ bool UCaptureComponent::SaveTextureToPNG(UTexture2D* Texture, const FString& Fil
 {
 	if (!Texture) return false;
 
-	FTexture2DMipMap& Mip = Texture->PlatformData->Mips[0];
+	FTexture2DMipMap& Mip = Texture->GetPlatformData()->Mips[0];
 	void* Data = Mip.BulkData.Lock(LOCK_READ_ONLY);
 
 	TArray<FColor> OutPixels;
@@ -114,9 +114,9 @@ UTexture2D* UCaptureComponent::LoadPNGToTexture(const FString& FilePath)
 		return nullptr;
 	}
 
-	void* TextureData = Texture->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+	void* TextureData = Texture->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
 	FMemory::Memcpy(TextureData, RawData.GetData(), RawData.Num());
-	Texture->PlatformData->Mips[0].BulkData.Unlock();
+	Texture->GetPlatformData()->Mips[0].BulkData.Unlock();
 
 	Texture->UpdateResource();
 
