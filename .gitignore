@@ -6,6 +6,9 @@ Content/*/ThirdParties/
 # Capture Images
 Content/Capture/*
 
+# Userdata
+Content/Userdata/*
+
 # Rider
 .idea/
 .vsconfig

@@ -3,6 +3,9 @@
 
 #include "JointQuestGameInstance.h"
 
+#include "JointQuest/TransportManager.h"
+#include "Kismet/GameplayStatics.h"
+
 void UJointQuestGameInstance::RecordCurrentRep(FExerciseRecord NewRecord)
 {
 	ExerciseRecords.Add(NewRecord);
@@ -37,6 +40,13 @@ float UJointQuestGameInstance::GetGameScore()
 float UJointQuestGameInstance::GetGameMaxAngle()
 {
 	return MaxAngle;
+}
+
+void UJointQuestGameInstance::LoadLevel(FName LevelName)
+{
+	UGameplayStatics::GetActorOfClass(this, ATransportManager::StaticClass())->Destroy();
+	
+	UGameplayStatics::OpenLevel(GetWorld(), LevelName);
 }
 
 int32 UJointQuestGameInstance::GetBestRepIndex()

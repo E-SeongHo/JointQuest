@@ -21,55 +21,56 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	static FString BytestreamToString(TArray<uint8> bytes);
+	FString BytestreamToString(TArray<uint8> bytes);
 
 
 	UFUNCTION(BlueprintCallable)
-	static TArray<uint8> StringToBytestream(FString text);
+	TArray<uint8> StringToBytestream(FString text);
 
 	UFUNCTION(BlueprintCallable)
-	static UTexture2D* DecodeImage(FString text);
+	UTexture2D* DecodeImage(FString text);
 
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
-	static float JointAngle;
-	static float SubAngle1;
-	static float SubAngle2;
+	UTexture2D* CreateTextureFromBits(TArray<uint8> data);
+	float JointAngle;
+	float SubAngle1;
+	float SubAngle2;
 	static FString BodyData;
 
 	// capture
-	static UTexture2D* CurrentWebcamDisplay;
+	UPROPERTY()
+	UTexture2D* CurrentWebcamDisplay;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	static UTexture2D* GetCurrentWebcamDisplay();
+	UTexture2D* GetCurrentWebcamDisplay();
 	
 	UFUNCTION(BlueprintCallable)
-	static float GetJointAngle();
+	float GetJointAngle();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetJointAngle(float value);
+	void SetJointAngle(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static float GetSubAngle1();
+	float GetSubAngle1();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetSubAngle1(float value);
+	void SetSubAngle1(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static float GetSubAngle2();
+	float GetSubAngle2();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetSubAngle2(float value);
+	void SetSubAngle2(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static bool SaveImage(UTexture2D* texture, const FString& path);
+	bool SaveImage(UTexture2D* texture, const FString& path);
 
 
 	UFUNCTION(BlueprintCallable)

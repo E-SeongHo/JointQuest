@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Records")
 	float GetGameMaxAngle();
 
+	UFUNCTION(BlueprintCallable, Category = "LevelLoads")
+	void LoadLevel(FName LevelName);
+	
 	int32 GetBestRepIndex();
 	void SetCurrentRepAsBestRep();
 

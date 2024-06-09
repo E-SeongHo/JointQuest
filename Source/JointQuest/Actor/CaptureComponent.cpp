@@ -9,6 +9,7 @@
 #include "JointQuest/GameInstance/JointQuestGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "../TransportManager.h"
+#include "JointQuest/PlayerController/MinerPlayerController.h"
 
 UCaptureComponent::UCaptureComponent()
 {
@@ -185,7 +186,7 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		{
 			TimeElapsedFromLastCapture = 0.0f;
 			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.png"), FrameIndex++);
-			SaveTextureToPNG(ATransportManager::GetCurrentWebcamDisplay(), FilePath);
+			SaveTextureToPNG(Cast<AMinerPlayerController>(GetOwner())->GetTransportManager()->GetCurrentWebcamDisplay(), FilePath);
 		}
 	}
 }

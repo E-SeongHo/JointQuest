@@ -90,9 +90,9 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 
 void AMinerPlayerController::ProcessKneeTracking()
 {
-	PlayerMainAngle = ATransportManager::GetJointAngle();
-	PlayerSubAngle1 = ATransportManager::GetSubAngle1();
-	PlayerSubAngle2 = ATransportManager::GetSubAngle2();
+	PlayerMainAngle = GetTransportManager()->GetJointAngle();
+	PlayerSubAngle1 = GetTransportManager()->GetSubAngle1();
+	PlayerSubAngle2 = GetTransportManager()->GetSubAngle2();
 
 	// hack
 	if(PlayerMainAngle > 0.0f)
@@ -165,4 +165,14 @@ void AMinerPlayerController::ProcessKneeTracking()
 			CaptureComp->EndCapture();			
 		}
 	}
+}
+
+ATransportManager* AMinerPlayerController::GetTransportManager()
+{
+	if(!TransportManager)
+	{
+		TransportManager = Cast<ATransportManager>(UGameplayStatics::GetActorOfClass(this, ATransportManager::StaticClass()));
+	}
+
+	return TransportManager;
 }

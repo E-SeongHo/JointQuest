@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "MinerPlayerController.generated.h"
 
+class ATransportManager;
 class UCaptureComponent;
 
 UENUM(BlueprintType)
@@ -41,13 +42,19 @@ public:
 	UCaptureComponent* GetCaptureComponent() const;
 	
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
-	
+
+	ATransportManager* GetTransportManager();
 private:
 	void ProcessKneeTracking();
+
+	
 	
 private:
 	UScoreComponent* ScoreComp;
 	UCaptureComponent* CaptureComp;
+
+	UPROPERTY()
+	ATransportManager* TransportManager;
 	
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> GraphWidgetClass;
