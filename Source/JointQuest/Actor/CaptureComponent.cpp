@@ -185,8 +185,14 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		{
 			TimeElapsedFromLastCapture = 0.0f;
 			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.png"), FrameIndex++);
-			SaveTextureToPNG(ATransportManager::GetCurrentWebcamDisplay(), FilePath);
+			SaveTextureToPNG(GetTransportManager()->GetCurrentWebcamDisplay(), FilePath);
 		}
 	}
 }
 
+ATransportManager* UCaptureComponent::GetTransportManager() {
+	if(!TransportManager){
+		TransportManager = (ATransportManager*)UGameplayStatics::GetActorOfClass(GetWorld(), ATransportManager::StaticClass());
+	}
+	return TransportManager;
+}

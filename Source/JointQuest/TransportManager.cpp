@@ -4,13 +4,6 @@
 #include "TransportManager.h"
 
 
-float ATransportManager::JointAngle = -1.0f;
-float ATransportManager::SubAngle1 = -1.0f;
-float ATransportManager::SubAngle2 = -1.0f;
-
-FString ATransportManager::BodyData = TEXT("null");
-TStrongObjectPtr<UTexture2D> ATransportManager::CurrentWebcamDisplay = nullptr;
-
 // Sets default values
 ATransportManager::ATransportManager()
 {
@@ -40,11 +33,11 @@ void ATransportManager::Tick(float DeltaTime)
 
 UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
 {
-	return CurrentWebcamDisplay.Get();
+	return CurrentWebcamDisplay;
 }
 
 void ATransportManager::SetCurrentWebcamDisplay(UTexture2D* image) {
-	CurrentWebcamDisplay.Reset(image);
+	CurrentWebcamDisplay = image;
 }
 
 FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
@@ -162,12 +155,4 @@ bool ATransportManager::SaveImage(UTexture2D* texture, const FString& path)
 	bool isSavedImage = FFileHelper::SaveArrayToFile(compressedBitmap, *path);
 
 	return isSavedImage;
-}
-
-void ATransportManager::SetBodyData(FString data) {
-	BodyData = data;
-}
-
-FString ATransportManager::GetBodyData(){
-	return BodyData;
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "JointQuest/TransportManager.h"
 #include "MinerPlayerController.generated.h"
 
 class UCaptureComponent;
@@ -61,6 +62,8 @@ private:
 	// joint tracking data
 	EJointTrackingStatus CurrentStatus;
 
+	ATransportManager* TransportManager = nullptr;
+
 	// player primary information
 	float PlayerLimitAngle = 90.0f;
 	float PlayerPeakAngle; // reset every reps
@@ -76,4 +79,7 @@ private:
 	// thresholds to play animation
 	float LowerBoundRate = 0.2f;
 	float UpperBoundRate = 0.8f;
+
+protected:
+	ATransportManager* GetTransportManager();
 };

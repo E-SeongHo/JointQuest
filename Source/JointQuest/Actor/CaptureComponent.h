@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "JointQuest/TransportManager.h"
 #include "CaptureComponent.generated.h"
 
 
@@ -28,6 +29,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	ATransportManager* GetTransportManager();
 
 private:
 	static bool SaveTextureToBinary(UTexture2D* Texture, const FString& FilePath);
@@ -41,6 +43,7 @@ private:
 	float TargetFrameInterval = 1.0f / 30.0f; // 30fps
 	float TimeElapsedFromLastCapture;
 	FString CaptureDirectory;
+	ATransportManager* TransportManager = nullptr;
 
 	// End Game
 	UPROPERTY()

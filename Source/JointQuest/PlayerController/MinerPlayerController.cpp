@@ -90,9 +90,9 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 
 void AMinerPlayerController::ProcessKneeTracking()
 {
-	PlayerMainAngle = ATransportManager::GetJointAngle();
-	PlayerSubAngle1 = ATransportManager::GetSubAngle1();
-	PlayerSubAngle2 = ATransportManager::GetSubAngle2();
+	PlayerMainAngle = GetTransportManager()->GetJointAngle();
+	PlayerSubAngle1 = GetTransportManager()->GetSubAngle1();
+	PlayerSubAngle2 = GetTransportManager()->GetSubAngle2();
 
 	// hack
 	if(PlayerMainAngle > 0.0f)
@@ -106,7 +106,7 @@ void AMinerPlayerController::ProcessKneeTracking()
 	// PlayerSubAngle1 : Inner angle between thigh and calf 70 <= x <= 100
 	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
-		if(WarningWidget->Visibility == ESlateVisibility::Hidden)
+		if(WarningWidget->GetVisibility() == ESlateVisibility::Hidden)
 		{
 			// incorrect webcam's depth tracking 
 			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -165,4 +165,12 @@ void AMinerPlayerController::ProcessKneeTracking()
 			CaptureComp->EndCapture();			
 		}
 	}
+}
+
+
+ATransportManager* AMinerPlayerController::GetTransportManager() {
+	if (!TransportManager) {
+		TransportManager = (ATransportManager*)UGameplayStatics::GetActorOfClass(GetWorld(), ATransportManager::StaticClass());
+	}
+	return TransportManager;
 }

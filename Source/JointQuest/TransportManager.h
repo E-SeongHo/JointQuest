@@ -37,51 +37,44 @@ protected:
 	//virtual void EndPlay(EEndPlayReason::Type e) override;
 
 	static UTexture2D* CreateTextureFromBits(TArray<uint8> data);
-	static float JointAngle;
-	static float SubAngle1;
-	static float SubAngle2;
-	static FString BodyData;
+	float JointAngle = -1.0f;
+	float SubAngle1 = -1.0f;
+	float SubAngle2 = -1.0f;
 
 	// capture
-	static TStrongObjectPtr<UTexture2D> CurrentWebcamDisplay;
+	UPROPERTY()
+	UTexture2D* CurrentWebcamDisplay;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	static UTexture2D* GetCurrentWebcamDisplay();
+	UTexture2D* GetCurrentWebcamDisplay();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetCurrentWebcamDisplay(UTexture2D* image);
+	void SetCurrentWebcamDisplay(UTexture2D* image);
 	
 	UFUNCTION(BlueprintCallable)
-	static float GetJointAngle();
+	float GetJointAngle();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetJointAngle(float value);
+	void SetJointAngle(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static float GetSubAngle1();
+	float GetSubAngle1();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetSubAngle1(float value);
+	void SetSubAngle1(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static float GetSubAngle2();
+	float GetSubAngle2();
 
 	UFUNCTION(BlueprintCallable)
-	static void SetSubAngle2(float value);
+	void SetSubAngle2(float value);
 
 	UFUNCTION(BlueprintCallable)
-	static void ResetAngles();
+	void ResetAngles();
 
 	UFUNCTION(BlueprintCallable)
-	static bool SaveImage(UTexture2D* texture, const FString& path);
-
-
-	UFUNCTION(BlueprintCallable)
-	static void SetBodyData(FString data);
-
-	UFUNCTION(BlueprintCallable)
-	static FString GetBodyData();
+	bool SaveImage(UTexture2D* texture, const FString& path);
 };
