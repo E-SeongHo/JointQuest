@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Records")
 	float GetGameMaxAngle();
 
+	UFUNCTION(BlueprintCallable, Category = "Reset")
+	void CleanUp();
+	
 	int32 GetBestRepIndex();
 	void SetCurrentRepAsBestRep();
 

@@ -39,6 +39,11 @@ float UJointQuestGameInstance::GetGameMaxAngle()
 	return MaxAngle;
 }
 
+void UJointQuestGameInstance::CleanUp()
+{
+	ExerciseRecords.Empty();
+}
+
 int32 UJointQuestGameInstance::GetBestRepIndex()
 {
 	return BestRepIndex;
