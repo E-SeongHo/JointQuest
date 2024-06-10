@@ -60,6 +60,7 @@ class ClientSocket:
         # 소켓 연결
         self.connection_attempts = 0
         self.sock = None
+        self.webcam_handler.setup_webcam()
         self.connect_server()
 
     # 서버 연결 펑션
@@ -78,6 +79,7 @@ class ClientSocket:
                 print(e)
                 self.connection_attempts += 1
                 print(f"Attempt {self.connection_attempts} failed.")
+                self.webcam_handler.release_webcam()
         # 연결 시도 5회 넘어가면 프로세스 종료
         print(f"Failed to connect after {MAX_CONNECTION_ATTEMPTS}. Exiting program.")
         
@@ -123,13 +125,14 @@ class ClientSocket:
             ‘measuring_body’ - 길이측정
             4. 무릎 운동
         """
-        self.webcam_handler.setup_webcam()
+        
         self.shutdown_connection_event.clear()
         try:
             while not self.shutdown_connection_event.is_set():
                 data = self.sock.recv(1024).decode().strip()
                 if not data:
                     break
+                print(data)
                 json_data = json.loads(data)
                 command = json_data["command"]
                 print("receive command:" ,command)
@@ -188,7 +191,7 @@ class ClientSocket:
         """
         소켓 연결을 종료시키는 함수
         """
-        self.webcam_handler.release_webcam()
+        
         if self.sock:
             self.sock.close()
         print("Socket closed and resources cleaned up.")
@@ -291,34 +294,34 @@ class ClientSocket:
         angle_dict={}
 
         try:
-            # 준비자세 체크
-            while self.webcam_handler.capture.isOpened() and not self.shutdown_thread_event.is_set():
-                ret, frame = self.webcam_handler.capture.read()
-                if not ret:
-                    raise Exception("Failed to read frame from webcam.")
-                frame = poseprocessor.initialize(frame)
-                pose_check_result = poseprocessor.check_pose(self.load_pose_data(), IDLE_CHECK_NODES, MARGIN)
-                frame = poseprocessor.draw_incorrect_joints(frame, self.webcam_handler.frame_width,
-                                                            self.webcam_handler.frame_height)
-                encoded_image = self.webcam_handler.finalize_image(frame)
-                data = self.data_form.copy()
-                data["image"] = encoded_image
+            # # 준비자세 체크
+            # while self.webcam_handler.capture.isOpened() and not self.shutdown_thread_event.is_set():
+            #     ret, frame = self.webcam_handler.capture.read()
+            #     if not ret:
+            #         raise Exception("Failed to read frame from webcam.")
+            #     frame = poseprocessor.initialize(frame)
+            #     pose_check_result = poseprocessor.check_pose(self.load_pose_data(), IDLE_CHECK_NODES, MARGIN)
+            #     frame = poseprocessor.draw_incorrect_joints(frame, self.webcam_handler.frame_width,
+            #                                                 self.webcam_handler.frame_height)
+            #     encoded_image = self.webcam_handler.finalize_image(frame)
+            #     data = self.data_form.copy()
+            #     data["image"] = encoded_image
 
-                if pose_check_result and pose_check_result["passed"]:
-                    angle = poseprocessor.get_angle_between_joints("l_vertical_hip", body_length)
-                    idle_cnt += 1
-                    if idle_cnt >= 60:
-                        data["angle"]["l_vertical_hip"] = np.median(idle_angles)
-                        self.send_data(data)
-                        break
-                    else:
-                        idle_angles.append(angle)
-                else:
-                    data["incorrect_joint"] = pose_check_result.get("failed_nodes", [])
-                    idle_angles.clear()
-                    idle_cnt = 0
+            #     if pose_check_result and pose_check_result["passed"]:
+            #         angle = poseprocessor.get_angle_between_joints("l_vertical_hip", body_length)
+            #         idle_cnt += 1
+            #         if idle_cnt >= 60:
+            #             data["angle"]["l_vertical_hip"] = np.median(idle_angles)
+            #             self.send_data(data)
+            #             break
+            #         else:
+            #             idle_angles.append(angle)
+            #     else:
+            #         data["incorrect_joint"] = pose_check_result.get("failed_nodes", [])
+            #         idle_angles.clear()
+            #         idle_cnt = 0
 
-                self.send_data(data)
+            #     self.send_data(data)
 
             # 각도 추적 시작
             while self.webcam_handler.capture.isOpened() and not self.shutdown_thread_event.is_set():
@@ -329,13 +332,13 @@ class ClientSocket:
                                                             self.webcam_handler.frame_height)
                 
                 angle = poseprocessor.get_angle_between_joints("l_vertical_hip", body_length)
-                frame = poseprocessor.draw_angle(frame, 23, self.webcam_handler.frame_width, self.webcam_handler.frame_height, angle)
+                # frame = poseprocessor.draw_angle(frame, 23, self.webcam_handler.frame_width, self.webcam_handler.frame_height, angle)
                 
                 lateral_hip_angle = poseprocessor.get_angle_between_joints("l_lateral_hip", body_length)
-                frame = poseprocessor.draw_angle(frame, 24, self.webcam_handler.frame_width, self.webcam_handler.frame_height, lateral_hip_angle)
+                # frame = poseprocessor.draw_angle(frame, 24, self.webcam_handler.frame_width, self.webcam_handler.frame_height, lateral_hip_angle)
 
                 vertical_knee_angle = poseprocessor.get_angle_between_joints("l_vertical_knee", body_length)
-                frame = poseprocessor.draw_angle(frame, 25, self.webcam_handler.frame_width, self.webcam_handler.frame_height, vertical_knee_angle)
+                # frame = poseprocessor.draw_angle(frame, 25, self.webcam_handler.frame_width, self.webcam_handler.frame_height, vertical_knee_angle)
                 
                 encoded_image = self.webcam_handler.finalize_image(frame)
                 data = self.data_form.copy()
