@@ -42,6 +42,8 @@ float UJointQuestGameInstance::GetGameMaxAngle()
 void UJointQuestGameInstance::CleanUp()
 {
 	ExerciseRecords.Empty();
+	ExerciseRecords.Shrink();
+	UE_LOG(LogTemp, Display, TEXT("GI RECORDS : %d"), ExerciseRecords.Num());
 	Score = 0.0f;
 	MaxAngle = 0.0f;
 	BestRepIndex = 0;

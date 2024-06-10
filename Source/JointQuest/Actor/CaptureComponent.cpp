@@ -166,10 +166,8 @@ void UCaptureComponent::GameEnd()
 UTexture2D* UCaptureComponent::StreamPOTG()
 {
 	// Ensure GameEnd is called so POTGData is Loaded.
-	static int32 CurrentFrameIdx = 0;
-
-	UTexture2D* TextureToStream = POTGData[CurrentFrameIdx];
-	CurrentFrameIdx = (CurrentFrameIdx + 1) % POTGData.Num();
+	UTexture2D* TextureToStream = POTGData[StreamIdx];
+	StreamIdx = (StreamIdx + 1) % POTGData.Num();
 
 	return TextureToStream;
 }

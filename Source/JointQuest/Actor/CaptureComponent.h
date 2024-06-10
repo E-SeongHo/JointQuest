@@ -45,7 +45,10 @@ private:
 
 	// End Game
 	UPROPERTY()
-	TArray<UTexture2D*> POTGData;  
+	TArray<UTexture2D*> POTGData;
+
+	// hack
+	int32 StreamIdx = 0;
 	
 	UPROPERTY()
 	UJointQuestGameInstance* GameInstance;
