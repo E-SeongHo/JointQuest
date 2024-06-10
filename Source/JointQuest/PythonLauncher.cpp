@@ -10,7 +10,8 @@ UPythonLauncher::UPythonLauncher(const FObjectInitializer& init) : UActorCompone
 }
 
 
-void UPythonLauncher::Launch(FString LaunchPath) {
+void UPythonLauncher::Launch(FString LaunchPath)
+{
 	FString command = FString(TEXT("python \""));
 	command.Append(LaunchPath);
 	command.Append("\"");
@@ -26,11 +27,13 @@ void UPythonLauncher::Launch(FString LaunchPath) {
 	//UE_LOG(LogCustom, Log, TEXT("EXEC %s"), *command);
 }
 
-FString UPythonLauncher::GetRootPath() {
+FString UPythonLauncher::GetRootPath()
+{
 	return SearchFromSource ? FPaths::GameSourceDir() : FPlatformProcess::BaseDir();
 }
 
-void UPythonLauncher::Launch() {
+void UPythonLauncher::Launch()
+{
 
 	FString path = GetRootPath();
 	path.Append(Path);

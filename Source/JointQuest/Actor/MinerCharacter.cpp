@@ -19,7 +19,6 @@
 #include "NiagaraSystem.h"
 #include "NiagaraComponent.h"
 #include "ScoreComponent.h"
-#include "../SoilGenerator.h"
 #include "Components/SceneCaptureComponent2D.h"
 
 AMinerCharacter::AMinerCharacter()
@@ -127,6 +126,7 @@ void AMinerCharacter::EndCharging()
 	bIsCharging = false;
 	UE_LOG(LogTemp, Display, TEXT("Charging Ended, Charged : %fs"), ChargedTime);
 
+	// Player Peak Angle will be reset soon
 	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
 	PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
 	
@@ -164,15 +164,13 @@ void AMinerCharacter::TriggerDiggingNiagaraEffect(float Duration)
 
 	// right side of the character
 	SpawnLocation = GetActorLocation() + EffectOffset;
-	NiagaraComponent =
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
+	NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
 	NiagaraComponent->SetFloatParameter(TEXT("Lifetime"), Duration);
 	NiagaraComponent->SetAutoDestroy(true);
 	
 	// left side of the character
 	SpawnLocation = GetActorLocation() + EffectOffset - FVector(0.0f, 2*EffectOffset.Y - 20.0f, 0.0f);
-	NiagaraComponent =
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
+	NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DiggingEffect, SpawnLocation);
 	NiagaraComponent->SetFloatParameter(TEXT("Lifetime"), Duration);
 	NiagaraComponent->SetAutoDestroy(true);
 }
@@ -180,11 +178,11 @@ void AMinerCharacter::TriggerDiggingNiagaraEffect(float Duration)
 void AMinerCharacter::DigGround()
 {
 	const bool bHasSucceeded = ChargedTime > MinChargeDuration;
-	//PlayerController->GetScoreComponent()->RecordCurrentRep(bHasSucceeded);
-
 	const int32 Point = ChargedTime * 10.0f;
 	const int32 Penalty = (PlayerController->GetFailedCnt() / 10) * 0.01f;
+
 	PlayerController->GetScoreComponent()->AwardPoints(Point - Penalty);
+	
 	UE_LOG(LogTemp, Display, TEXT("Current Points : %d, FailedCnt Was : %d"), GameMode->GetScore(), PlayerController->GetFailedCnt());
 
 	if(!bHasSucceeded)
@@ -195,7 +193,7 @@ void AMinerCharacter::DigGround()
 	}
 	
 	PlayerController->ClientStartCameraShake(DiggingShake);
-	UE_LOG(LogTemp, Warning, TEXT("Shaking"));
+	UE_LOG(LogTemp, Display, TEXT("Shaking"));
 
 	float MoveDuration = 1.5f; // hack
 	

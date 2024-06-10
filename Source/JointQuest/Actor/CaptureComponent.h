@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "JointQuest/TransportManager.h"
 #include "CaptureComponent.generated.h"
-
 
 class UJointQuestGameInstance;
 
@@ -29,10 +27,11 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-	ATransportManager* GetTransportManager();
 
 private:
+	// OPTIMIZE: If PNG format is not required, save as binary to reduce overhead.
 	static bool SaveTextureToBinary(UTexture2D* Texture, const FString& FilePath);
+	
 	static bool SaveTextureToPNG(UTexture2D* Texture, const FString& FilePath);
 	static UTexture2D* LoadPNGToTexture(const FString& FilePath);
 	
@@ -43,7 +42,6 @@ private:
 	float TargetFrameInterval = 1.0f / 30.0f; // 30fps
 	float TimeElapsedFromLastCapture;
 	FString CaptureDirectory;
-	ATransportManager* TransportManager = nullptr;
 
 	// End Game
 	UPROPERTY()

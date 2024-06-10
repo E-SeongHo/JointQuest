@@ -9,6 +9,7 @@
 #include "JointQuest/GameInstance/JointQuestGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "../TransportManager.h"
+#include "JointQuest/PlayerController/MinerPlayerController.h"
 
 UCaptureComponent::UCaptureComponent()
 {
@@ -125,7 +126,7 @@ UTexture2D* UCaptureComponent::LoadPNGToTexture(const FString& FilePath)
 
 void UCaptureComponent::BeginCapture()
 {
-	//check(!bIsCapturing);
+	if(bIsCapturing) return;
 
 	bIsCapturing = true;
 	CapturingIndex = GameInstance->GetRecords().Num();
@@ -164,6 +165,7 @@ void UCaptureComponent::GameEnd()
 
 UTexture2D* UCaptureComponent::StreamPOTG()
 {
+	// Ensure GameEnd is called so POTGData is Loaded.
 	static int32 CurrentFrameIdx = 0;
 
 	UTexture2D* TextureToStream = POTGData[CurrentFrameIdx];
@@ -176,7 +178,7 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	// target frame : 30fps
+	// target frame rate : 30fps
 	if(bIsCapturing)
 	{
 		TimeElapsedFromLastCapture += DeltaTime;
@@ -185,14 +187,7 @@ void UCaptureComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		{
 			TimeElapsedFromLastCapture = 0.0f;
 			const FString FilePath =  CaptureDirectory / FString::Printf(TEXT("_%d.png"), FrameIndex++);
-			SaveTextureToPNG(GetTransportManager()->GetCurrentWebcamDisplay(), FilePath);
+			SaveTextureToPNG(Cast<AMinerPlayerController>(GetOwner())->GetTransportManager()->GetCurrentWebcamDisplay(), FilePath);
 		}
 	}
-}
-
-ATransportManager* UCaptureComponent::GetTransportManager() {
-	if(!TransportManager){
-		TransportManager = (ATransportManager*)UGameplayStatics::GetActorOfClass(GetWorld(), ATransportManager::StaticClass());
-	}
-	return TransportManager;
 }

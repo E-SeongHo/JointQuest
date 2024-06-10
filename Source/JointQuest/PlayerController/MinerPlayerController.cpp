@@ -2,8 +2,6 @@
 
 #include "MinerPlayerController.h"
 
-#include "../Widget/GameplayWidget.h"
-#include "../NetworkHandler.h"
 #include "Blueprint/UserWidget.h"
 #include "../Widget/GraphWidget.h"
 #include "JointQuest/Actor/ScoreComponent.h"
@@ -26,6 +24,9 @@ void AMinerPlayerController::BeginPlay()
 	WarningWidget = CreateWidget<UWarningWidget>(GetWorld(), AngleOutOfBoundWarningWidget);
 	WarningWidget->AddToViewport();
 	WarningWidget->SetVisibility(ESlateVisibility::Hidden);
+
+	TransportManager = Cast<ATransportManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ATransportManager::StaticClass()));
+	check(TransportManager);
 }
 
 void AMinerPlayerController::PlayerTick(float DeltaSeconds)
@@ -64,25 +65,32 @@ UCaptureComponent* AMinerPlayerController::GetCaptureComponent() const
 	return CaptureComp;
 }
 
+ATransportManager* AMinerPlayerController::GetTransportManager() const
+{
+	return TransportManager;
+}
+
 void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 {
 	//Super::GameHasEnded(EndGameFocus, bIsWinner);
+	bHasGameEnded = true;
+	// hack
+	CaptureComp->EndCapture();
 	
 	UJointQuestGameInstance* GameInstance = Cast<UJointQuestGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	GameInstance->GameEnd(ScoreComp->GetCurrentScore());
-	
+
 	for(int i = 0; i < 5; i++)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Angle : %f, Succeeded : %d "),GameInstance->GetRecordAngleRate(i), GameInstance->HasRecordSucceeded(i));
+		UE_LOG(LogTemp, Display, TEXT("PeakAngle : %f, Succeeded : %d "), GameInstance->GetRecords()[i].PeakAngle, GameInstance->HasRecordSucceeded(i));
 	}
-
-	CaptureComp->GameEnd();
-	bHasGameEnded = true;
-
+	
 	// Make sure waits until the last rep is recorded properly
 	FTimerHandle EndGameTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(EndGameTimerHandle, [this]()
+	GetWorld()->GetTimerManager().SetTimer(EndGameTimerHandle, [this, GameInstance]()
 	{
+		GameInstance->GameEnd(ScoreComp->GetCurrentScore());
+		CaptureComp->GameEnd();
+
 		UUserWidget* GraphWidget = CreateWidget(GetWorld(), GraphWidgetClass);
 		GraphWidget->AddToViewport();
 	}, 3.0f, false);
@@ -90,31 +98,28 @@ void AMinerPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 
 void AMinerPlayerController::ProcessKneeTracking()
 {
-	PlayerMainAngle = GetTransportManager()->GetJointAngle();
-	PlayerSubAngle1 = GetTransportManager()->GetSubAngle1();
-	PlayerSubAngle2 = GetTransportManager()->GetSubAngle2();
+	PlayerMainAngle = TransportManager->GetJointAngle();
+	PlayerSubAngle1 = TransportManager->GetSubAngle1();
+	PlayerSubAngle2 = TransportManager->GetSubAngle2();
 
 	// hack
-	if(PlayerMainAngle > 0.0f)
-	{
-		bHasGameStarted = true;	
-	}
+	if(PlayerMainAngle > 0.0f) bHasGameStarted = true;	
 	if(!bHasGameStarted) return;
 	
 	const float RaisedRate = PlayerMainAngle / PlayerLimitAngle;
 	
-	// PlayerSubAngle1 : Inner angle between thigh and calf 70 <= x <= 100
+	// Inner angle between thigh and calf 70 <= x <= 100
 	if(PlayerSubAngle1 < 70.0f || PlayerSubAngle1 > 100.0f)
 	{
 		if(WarningWidget->GetVisibility() == ESlateVisibility::Hidden)
 		{
-			// incorrect webcam's depth tracking 
+			// TODO : fix incorrect webcam's depth tracking 
 			//WarningWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 		CntSubAngle1Failed++;
 	}
 	
-	// PlayerSubAngle2 Horizontal angle between pelvis and thigh 80 <= x <= 110
+	// Horizontal angle between pelvis and thigh 80 <= x <= 110
 	if(PlayerSubAngle2 < 80.0f || PlayerSubAngle2 > 110.0f)
 	{
 		if(WarningWidget->GetVisibility() == ESlateVisibility::Hidden)
@@ -151,7 +156,6 @@ void AMinerPlayerController::ProcessKneeTracking()
 	}
 	else if(CurrentStatus == EJointTrackingStatus::Holding)
 	{
-		
 		if(RaisedRate < UpperBoundRate)
 		{
 			CurrentStatus = EJointTrackingStatus::Falling;
@@ -165,12 +169,4 @@ void AMinerPlayerController::ProcessKneeTracking()
 			CaptureComp->EndCapture();			
 		}
 	}
-}
-
-
-ATransportManager* AMinerPlayerController::GetTransportManager() {
-	if (!TransportManager) {
-		TransportManager = (ATransportManager*)UGameplayStatics::GetActorOfClass(GetWorld(), ATransportManager::StaticClass());
-	}
-	return TransportManager;
 }

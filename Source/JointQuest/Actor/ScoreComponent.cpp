@@ -32,7 +32,7 @@ void UScoreComponent::AwardPoints(int32 Points)
 	{
 		MaxRepScore = Points;
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("BestPoints: %d"), Points));
+		UE_LOG(LogTemp, Display, TEXT("Set Best Rep: %d, Points : %d"), GameInstance->GetRecords().Num()-1, Points); 
 		GameInstance->SetCurrentRepAsBestRep();
 	}
 }

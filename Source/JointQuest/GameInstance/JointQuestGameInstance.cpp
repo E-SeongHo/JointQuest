@@ -18,7 +18,7 @@ float UJointQuestGameInstance::GetRecordAngleRate(const int32 idx) const
 {
 	if(idx >= ExerciseRecords.Num()) return -1.0f;
 
-	float Rate =  FMath::Clamp(ExerciseRecords[idx].PeakAngle / PlayerLimitAngle, 0.0f, 1.0f);
+	const float Rate =  FMath::Clamp(ExerciseRecords[idx].PeakAngle / PlayerLimitAngle, 0.0f, 1.0f);
 	return (Rate-0.8f) * 5;
 }
 
@@ -42,6 +42,9 @@ float UJointQuestGameInstance::GetGameMaxAngle()
 void UJointQuestGameInstance::CleanUp()
 {
 	ExerciseRecords.Empty();
+	Score = 0.0f;
+	MaxAngle = 0.0f;
+	BestRepIndex = 0;
 }
 
 int32 UJointQuestGameInstance::GetBestRepIndex()

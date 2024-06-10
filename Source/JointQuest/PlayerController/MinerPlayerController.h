@@ -4,10 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "JointQuest/TransportManager.h"
 #include "MinerPlayerController.generated.h"
-
-class UCaptureComponent;
 
 UENUM(BlueprintType)
 enum class EJointTrackingStatus : uint8
@@ -18,9 +15,10 @@ enum class EJointTrackingStatus : uint8
 	Falling // < UpperBoundRate
 };
 
-class UNetworkHandler;
+class UCaptureComponent;
 class UScoreComponent;
 class UWarningWidget;
+class ATransportManager;
 
 UCLASS()
 class JOINTQUEST_API AMinerPlayerController : public APlayerController
@@ -40,9 +38,11 @@ public:
 	UScoreComponent* GetScoreComponent() const;
 	UFUNCTION(BlueprintCallable, Category = "Capture")
 	UCaptureComponent* GetCaptureComponent() const;
+
+	ATransportManager* GetTransportManager() const;
 	
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
-	
+
 private:
 	void ProcessKneeTracking();
 	
@@ -62,6 +62,7 @@ private:
 	// joint tracking data
 	EJointTrackingStatus CurrentStatus;
 
+	UPROPERTY()
 	ATransportManager* TransportManager = nullptr;
 
 	// player primary information
@@ -79,7 +80,4 @@ private:
 	// thresholds to play animation
 	float LowerBoundRate = 0.2f;
 	float UpperBoundRate = 0.8f;
-
-protected:
-	ATransportManager* GetTransportManager();
 };

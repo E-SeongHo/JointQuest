@@ -36,11 +36,13 @@ UTexture2D* ATransportManager::GetCurrentWebcamDisplay()
 	return CurrentWebcamDisplay;
 }
 
-void ATransportManager::SetCurrentWebcamDisplay(UTexture2D* image) {
+void ATransportManager::SetCurrentWebcamDisplay(UTexture2D* image)
+{
 	CurrentWebcamDisplay = image;
 }
 
-FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
+FString ATransportManager::BytestreamToString(TArray<uint8> bytes)
+{
 	/*
 	uint8* arr = new uint8[bytes.Num()];
 	for (int i = 0; i < bytes.Num(); i++) {
@@ -52,7 +54,8 @@ FString ATransportManager::BytestreamToString(TArray<uint8> bytes) {
 }
 
 
-TArray<uint8> ATransportManager::StringToBytestream(FString text) {
+TArray<uint8> ATransportManager::StringToBytestream(FString text)
+{
 	TArray<uint8> res;
 	const int32 len = FTCHARToUTF8_Convert::ConvertedLength(*text, text.Len());
 	res.SetNumUninitialized(len);
@@ -61,7 +64,8 @@ TArray<uint8> ATransportManager::StringToBytestream(FString text) {
 	return res;
 }
 
-UTexture2D* ATransportManager::DecodeImage(FString text) {
+UTexture2D* ATransportManager::DecodeImage(FString text)
+{
 
 	TArray<uint8> buffer;
 
@@ -86,7 +90,8 @@ UTexture2D* ATransportManager::DecodeImage(FString text) {
 	}
 }
 
-UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
+UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data)
+{
 	UTexture2D* res = FImageUtils::ImportBufferAsTexture2D(data);
 
 	res->MipGenSettings = TMGS_NoMipmaps;
@@ -105,33 +110,40 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data) {
 	return res;
 }
 
-float ATransportManager::GetJointAngle() {
+float ATransportManager::GetJointAngle()
+{
 	return JointAngle;
 }
 
-void ATransportManager::SetJointAngle(float value){
+void ATransportManager::SetJointAngle(float value)
+{
 	if (value < 0.1) { return; }
 
 	JointAngle = value;
 }
-float ATransportManager::GetSubAngle1() {
+float ATransportManager::GetSubAngle1()
+{
 	return SubAngle1;
 }
 
-void ATransportManager::SetSubAngle1(float value) {
+void ATransportManager::SetSubAngle1(float value)
+{
 	if (value < 0.1) { return; }
 	SubAngle1 = value;
 }
-float ATransportManager::GetSubAngle2() {
+float ATransportManager::GetSubAngle2()
+{
 	return SubAngle2;
 }
 
-void ATransportManager::SetSubAngle2(float value) {
+void ATransportManager::SetSubAngle2(float value)
+{
 	if (value < 0.1) { return; }
 	SubAngle2 = value;
 }
 
-void ATransportManager::ResetAngles() {
+void ATransportManager::ResetAngles()
+{
 	JointAngle = -1.0f;
 	SubAngle1 = -1.0f;
 	SubAngle2 = -1.0f;
