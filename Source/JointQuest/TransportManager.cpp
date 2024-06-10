@@ -107,7 +107,7 @@ UTexture2D* ATransportManager::CreateTextureFromBits(TArray<uint8> data)
 	res->UpdateResource();
 
 	//CurrentWebcamDisplay = res;
-	return res;
+	return res;	
 }
 
 float ATransportManager::GetJointAngle()
