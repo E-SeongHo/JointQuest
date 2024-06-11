@@ -93,7 +93,6 @@ class P_vec:
             return
         length_gap = math.sqrt(abs(body_part_length[partname] ** 2 - self.get_3d_vetcor_size(partname) ** 2))
         if (length_gap > correct_gap):
-            print("z coord is corrected")
             z = math.sqrt(abs(body_part_length[partname] ** 2 - self.get_2d_vetcor_size(partname) ** 2))
 
             if (self.body_part_vectors[partname][2] >= 0):
@@ -105,7 +104,6 @@ class P_vec:
     def angle_between_vectors(self, body_part1: str, body_part2: str, body_part_length: dict = {}):
         # 몸 길이 입력이 있을 시, 벡터 값 수정
         if body_part_length:
-            print("z coord is loaded")
             self.correct_vector(body_part_length, body_part1)
             self.correct_vector(body_part_length, body_part2)
 
