@@ -1,0 +1,11 @@
+example/
+output/
+*.pyc
+__pycache__/
+user/
+trashbin/
+__pycache__
+venv
+.venv
+libs/
+test.py
